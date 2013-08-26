@@ -60,19 +60,33 @@
        (aset ~a-sym ~x (double ~v)))))
 
 
-(defn submatrix [M [[a nx] [b ny]]]
-  (let [m (clx/matrix (DoubleMatrix. nx ny (make-array Double/TYPE (* nx ny))))]
-    (dotimes [i nx]
-      (dotimes [j ny]
-        (clx/set m i j (clx/get M (+ a i) (+ b j)))))
-    m))
+(defmacro submatrix-1 [M [[a nx] [b ny]]]
+  `(let [m# (clx/matrix (DoubleMatrix. ~nx ~ny
+                                       (make-array Double/TYPE (* ~nx ~ny))))]
+     (dotimes [i ~nx]
+       (dotimes [j ~ny]
+         (clx/set m# i j (clx/get ~M (+ ~a i) (+ ~b j)))))
+     m#))
 
-(defn submatrix-2 [f M [[a nx] [b ny]]]
-  (let [m (make-array Double/TYPE nx ny)]
-    (dotimes [i nx]
-      (dotimes [j ny]
-        (f m i j (clx/get M (+ a i) (+ b j)))))
-    (clx/matrix (DoubleMatrix. ^"[[D" m))))
+(defmacro submatrix-2 [M [[a nx] [b ny]]]
+  `(let [m# (make-array Double/TYPE ~nx ~ny)]
+     (dotimes [i ~nx]
+       (dotimes [j ~ny]
+         (cg-aset! m# i j (clx/get ~M (+ ~a i) (+ ~b j)))))
+     (clx/matrix (DoubleMatrix. ^"[[D" m#))))
 
 (defn submatrix-3 [M [[a nx] [b ny]]]
-  (clx/from-indices nx ny (fn [i j] (clx/get M (+ a i) (+ b j)))))
+  `(clx/from-indices ~nx ~ny (fn [i j] (clx/get ~M (+ ~a i) (+ ~b j)))))
+
+
+
+(defmacro E-1 [z nx ny]
+  `(submatrix-1 ~z [[1 ~nx] [1 ~ny]]))
+
+
+(defmacro E-2 [z nx ny]
+  `(submatrix-2 ~z [[1 ~nx] [1 ~ny]]))
+
+
+(defmacro E-3 [z nx ny]
+  `(submatrix-3 ~z [[1 ~nx] [1 ~ny]]))
