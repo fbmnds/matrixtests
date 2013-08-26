@@ -1,0 +1,252 @@
+Microsoft Windows [Version 6.2.9200]
+(c) 2012 Microsoft Corporation. Alle Rechte vorbehalten.
+
+~\projects\matrixtests\src>cd ..
+cd ..
+
+~\projects\matrixtests>lein check
+lein check
+Compiling namespace matrixtests
+Reflection warning, clatrix/core.clj:51:41 - reference to field me can't be resolved.
+Reflection warning, clatrix/core.clj:70:12 - reference to field toArray can't be resolved.
+Reflection warning, clatrix/core.clj:113:38 - reference to field me can't be resolved.
+Reflection warning, clatrix/core.clj:131:10 - reference to field toArray can't be resolved.
+Reflection warning, clatrix/core.clj:210:7 - reference to field isRowVector can't be resolved.
+Reflection warning, clatrix/core.clj:210:30 - reference to field isColumnVector can't be resolved.
+Reflection warning, clatrix/core.clj:237:16 - call to get can't be resolved.
+Reflection warning, clatrix/core.clj:242:16 - call to get can't be resolved.
+Reflection warning, clatrix/core.clj:303:15 - reference to field dup can't be resolved.
+Reflection warning, clatrix/core.clj:318:18 - call to org.jblas.DoubleMatrix ctor can't be resolved.
+Reflection warning, clatrix/core.clj:735:14 - call to getRow can't be resolved.
+Reflection warning, clatrix/core.clj:736:20 - reference to field columns can't be resolved.
+Reflection warning, clatrix/core.clj:736:7 - call to reshape can't be resolved.
+Reflection warning, clatrix/core.clj:742:14 - call to getColumn can't be resolved.
+Reflection warning, clatrix/core.clj:965:3 - reference to field sum can't be resolved.
+Reflection warning, clatrix/core.clj:1095:21 - reference to field toArray can't be resolved.
+Reflection warning, clatrix/core.clj:1137:9 - call to put can't be resolved.
+Reflection warning, clatrix/core.clj:1137:9 - call to put can't be resolved.
+Reflection warning, clatrix/core.clj:1219:5 - call to write can't be resolved.
+Performance warning, clatrix/core.clj:1334:3 - case has int tests, but tested expression is not primitive.
+Reflection warning, clatrix/core.clj:1609:10 - reference to field toArray can't be resolved.
+Reflection warning, clatrix/core.clj:1613:10 - reference to field toArray can't be resolved.
+Reflection warning, incanter/core.clj:677:30 - reference to field copy can't be resolved.
+Reflection warning, incanter/core.clj:1442:67 - reference to field getName can't be resolved.
+Reflection warning, incanter/core.clj:1445:53 - reference to field getName can't be resolved.
+Reflection warning, incanter/core.clj:2491:38 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2491:23 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2493:38 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2493:23 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2495:38 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2495:23 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2496:38 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2506:52 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2506:37 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2507:37 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2523:17 - call to javax.swing.ImageIcon ctor can't be resolved.
+Reflection warning, incanter/core.clj:2541:13 - call to browse can't be resolved.
+Reflection warning, incanter/core.clj:2553:85 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2553:60 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2554:60 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2592:85 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2592:60 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2593:60 - call to java.util.Vector ctor can't be resolved.
+Reflection warning, incanter/core.clj:2594:6 - call to setModel can't be resolved.
+~\projects\matrixtests> lein test
+ lein test
+
+lein test matrixtests-test
+
+lein test :only matrixtests-test/a-test
+
+FAIL in (a-test) (matrixtests_test.clj:7)
+FIXME, I fail.
+expected: (= 0 1)
+  actual: (not (= 0 1))
+
+Ran 1 tests containing 1 assertions.
+1 failures, 0 errors.
+Tests failed.
+~\projects\matrixtests> lein midje
+ lein midje
+= Namespace matrixtests-test
+>>> Output from clojure.test tests:
+
+FAIL in (a-test) (matrixtests_test.clj:7)
+FIXME, I fail.
+expected: (= 0 1)
+  actual: (not (= 0 1))
+
+1 failures, 0 errors.
+>>> Midje summary:
+No facts were checked. Is that what you wanted?
+Subprocess failed
+~\projects\matrixtests>lein midje
+lein midje
+= Namespace matrixtests-test
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aget a j))))
+:  205.315038
+(dotimes [i 1000] (dotimes [j 1000] (deep-aget doubles dd i j)))
+:  199.59194
+(dotimes [i 1000] (dotimes [j 1000] (aset dd i j 42.0)))
+:  54721.097825
+(dotimes [i 1000] (dotimes [j 1000] (-> dd (aget i) (aset j 42.0))))
+Reflection warning, matrixtests_test.clj:35:72 - call to aset can't be resolved.
+:  53017.698828
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aset a j 42.0))))
+:  682.630742
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aset a j (double 42.0)))))
+:  671.570793
+(dotimes [i 1000] (dotimes [j 1000] (deep-aset doubles dd i j 42.0)))
+:  671.595175
+No facts were checked. Is that what you wanted?
+~\projects\matrixtests>lein deps
+lein deps
+Retrieving criterium/criterium/0.4.1/criterium-0.4.1.pom from clojars
+Retrieving criterium/criterium/0.4.1/criterium-0.4.1.jar from clojars
+~\projects\matrixtests>lein midje
+lein midje
+= Namespace matrixtests-test
+optimal hints on aget, CGrande
+WARNING: Final GC required 6.310526146409462 % of runtime
+Evaluation count : 21540 in 60 samples of 359 calls.
+             Execution time mean : 3,993561 ms
+    Execution time std-deviation : 1,956168 ms
+   Execution time lower quantile : 2,642969 ms ( 2,5%)
+   Execution time upper quantile : 8,207745 ms (97,5%)
+                   Overhead used : 2,028001 ns
+optimal hints/macros on aget, CGrande
+Evaluation count : 17700 in 60 samples of 295 calls.
+             Execution time mean : 3,781972 ms
+    Execution time std-deviation : 1,507882 ms
+   Execution time lower quantile : 2,651065 ms ( 2,5%)
+   Execution time upper quantile : 7,232297 ms (97,5%)
+                   Overhead used : 2,028001 ns
+optimal hints/macros/cg-aget! on aget, CGrande
+Evaluation count : 22680 in 60 samples of 378 calls.
+             Execution time mean : 4,443756 ms
+    Execution time std-deviation : 2,035278 ms
+   Execution time lower quantile : 2,663976 ms ( 2,5%)
+   Execution time upper quantile : 8,274184 ms (97,5%)
+                   Overhead used : 2,028001 ns
+optimal hints/macros/f-cg-aget! on aget, CGrande
+Evaluation count : 1320 in 60 samples of 22 calls.
+             Execution time mean : 52,963770 ms
+    Execution time std-deviation : 16,445660 ms
+   Execution time lower quantile : 39,118405 ms ( 2,5%)
+   Execution time upper quantile : 87,271590 ms (97,5%)
+                   Overhead used : 2,028001 ns
+
+Found 1 outliers in 60 samples (1,6667 %)
+        low-severe       1 (1,6667 %)
+ Variance from outliers : 96,4143 % Variance is severely inflated by outliers
+optimal hints/macros/cg-aget! on aget, LJensen
+Evaluation count : 9480 in 60 samples of 158 calls.
+             Execution time mean : 10,110327 ms
+    Execution time std-deviation : 4,312733 ms
+   Execution time lower quantile : 5,845484 ms ( 2,5%)
+   Execution time upper quantile : 18,533997 ms (97,5%)
+                   Overhead used : 2,028001 ns
+hints on aset, CGrande
+Reflection warning, matrixtests_test.clj:60:75 - call to aset can't be resolved.
+  <menu-bar> <signals> <break>Batchvorgang abbrechen (J/N)? j
+j
+
+~\projects\matrixtests>lein midje :filter aset
+lein midje :filter aset
+= Namespace matrixtests-test
+Checking aset! variants
+improved hints on aset, CGrande
+WARNING: Final GC required 5.93983634336791 % of runtime
+Evaluation count : 14220 in 60 samples of 237 calls.
+             Execution time mean : 5,750961 ms
+    Execution time std-deviation : 1,790148 ms
+   Execution time lower quantile : 4,221422 ms ( 2,5%)
+   Execution time upper quantile : 9,899910 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 7 outliers in 60 samples (11,6667 %)
+        low-severe       7 (11,6667 %)
+ Variance from outliers : 96,4155 % Variance is severely inflated by outliers
+optimal hints on aset, CGrande
+Evaluation count : 14160 in 60 samples of 236 calls.
+             Execution time mean : 5,920522 ms
+    Execution time std-deviation : 2,009482 ms
+   Execution time lower quantile : 4,134181 ms ( 2,5%)
+   Execution time upper quantile : 10,239472 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 5 outliers in 60 samples (8,3333 %)
+        low-severe       5 (8,3333 %)
+ Variance from outliers : 96,4554 % Variance is severely inflated by outliers
+optimal hints/macros on aset, CGrande
+Evaluation count : 13920 in 60 samples of 232 calls.
+             Execution time mean : 4,963154 ms
+    Execution time std-deviation : 1,314668 ms
+   Execution time lower quantile : 4,200972 ms ( 2,5%)
+   Execution time upper quantile : 8,967949 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 7 outliers in 60 samples (11,6667 %)
+        low-severe       2 (3,3333 %)
+        low-mild         5 (8,3333 %)
+ Variance from outliers : 94,6650 % Variance is severely inflated by outliers
+optimal hints/macros/cg-aset! on aset, CGrande
+Evaluation count : 13800 in 60 samples of 230 calls.
+             Execution time mean : 5,018031 ms
+    Execution time std-deviation : 1,275981 ms
+   Execution time lower quantile : 4,219010 ms ( 2,5%)
+   Execution time upper quantile : 7,984297 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 8 outliers in 60 samples (13,3333 %)
+        low-severe       1 (1,6667 %)
+        low-mild         7 (11,6667 %)
+ Variance from outliers : 94,6365 % Variance is severely inflated by outliers
+optimal hints/macros/f-cg-aset! on aset, CGrande
+Evaluation count : 1860 in 60 samples of 31 calls.
+             Execution time mean : 32,801330 ms
+    Execution time std-deviation : 3,838327 ms
+   Execution time lower quantile : 29,402969 ms ( 2,5%)
+   Execution time upper quantile : 39,943951 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 3 outliers in 60 samples (5,0000 %)
+        low-severe       1 (1,6667 %)
+        low-mild         2 (3,3333 %)
+ Variance from outliers : 75,5488 % Variance is severely inflated by outliers
+optimal hints/macros/jl-aset! on aset, LJensen
+Evaluation count : 5400 in 60 samples of 90 calls.
+             Execution time mean : 15,814669 ms
+    Execution time std-deviation : 6,233722 ms
+   Execution time lower quantile : 11,097723 ms ( 2,5%)
+   Execution time upper quantile : 29,967559 ms (97,5%)
+                   Overhead used : 4,865378 ns
+
+Found 2 outliers in 60 samples (3,3333 %)
+        low-severe       2 (3,3333 %)
+ Variance from outliers : 98,1713 % Variance is severely inflated by outliers
+All checks (1) succeeded.
+~\projects\matrixtests>lein midje :filter clx
+= Namespace matrixtests-test
+Checking Clatrix
+- Clatrix get
+WARNING: Final GC required 6.276631766255207 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 31,999249 sec
+    Execution time std-deviation : 7,739788 sec
+   Execution time lower quantile : 23,157727 sec ( 2,5%)
+   Execution time upper quantile : 45,769651 sec (97,5%)
+                   Overhead used : 4,119903 ns
+- Clatrix set
+WARNING: Final GC required 1.150680409451265 % of runtime
+Evaluation count : 1800 in 60 samples of 30 calls.
+             Execution time mean : 20,447123 ms
+    Execution time std-deviation : 1,961889 ms
+   Execution time lower quantile : 17,735338 ms ( 2,5%)
+   Execution time upper quantile : 25,380520 ms (97,5%)
+                   Overhead used : 4,119903 ns
+
+Found 2 outliers in 60 samples (3,3333 %)
+        low-severe       2 (3,3333 %)
+ Variance from outliers : 68,6139 % Variance is severely inflated by outliers
+All checks (1) succeeded.
