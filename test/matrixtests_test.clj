@@ -29,7 +29,7 @@
   `(crit/bench (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
 
 (defmacro bench-1K [expr]
-  `(crit/bench (dotimes [i 1000] '~expr)))
+  `(crit/bench (dotimes [i# 1000] '~expr)))
 
 (def dd (make-array Double/TYPE 1000 1000))
 (def DD (clx/matrix (DoubleMatrix. ^"[[D" dd)))
