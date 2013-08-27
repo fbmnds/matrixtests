@@ -28,8 +28,15 @@
 (defmacro bench-1M [expr]
   `(crit/bench (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
 
+(defmacro once-1M [expr]
+  `(time (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
+
 (defmacro bench-1K [expr]
   `(crit/bench (dotimes [i# 1000] '~expr)))
+
+(defmacro once-1K [expr]
+  `(time (dotimes [i# 1000] '~expr)))
+
 
 (def dd (make-array Double/TYPE 1000 1000))
 (def DD (clx/matrix (DoubleMatrix. ^"[[D" dd)))
@@ -44,18 +51,33 @@
       ;;(crit/bench (dotimes [i 1000] (dotimes [j 1000] (-> dd (aget i) (aget j)))))
 
       (println "- optimal hints on aget, CGrande")
+      (println "--------------------------------")
+      (println "once-only reference:")
+      (once-1M (let [#^doubles a (aget #^objects dd 'i#)] (aget a 'j#)))
       (bench-1M (let [#^doubles a (aget #^objects dd 'i#)] (aget a 'j#)))
 
       (println "- optimal hints/macros on aget, CGrande")
+      (println "---------------------------------------")
+      (println "once-only reference:")
+      (once-1M (deep-aget doubles dd 'i# 'j#))
       (bench-1M (deep-aget doubles dd 'i# 'j#))
 
       (println "- optimal hints/macros/cg-aget! on aget, CGrande")
+      (println "------------------------------------------------")
+      (println "once-only reference:")
+      (once-1M (cg-aget! dd 'i# 'j#))
       (bench-1M (cg-aget! dd 'i# 'j#))
 
       (println "- optimal hints/macros/f-cg-aget! on aget, CGrande")
+      (println "--------------------------------------------------")
+      (println "once-only reference:")
+      (once-1M (f-cg-aget! dd 'i# 'j#))
       (bench-1M (f-cg-aget! dd 'i# 'j#))
 
       (println "- optimal hints/macros/cg-aget! on aget, LJensen")
+      (println "------------------------------------------------")
+      (println "once-only reference:")
+      (once-1M (lj-aget! dd 'i# 'j#))
       (bench-1M (lj-aget! dd 'i# 'j#))
 
       true => truthy)
