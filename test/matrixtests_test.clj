@@ -101,8 +101,8 @@
 ;;
 ;; (fact "test" :test
 ;;       (measure
-;;        (dotimes [i 1000]
-;;          (dotimes [j 1000]
+;;        (dotimes [i 100]
+;;          (dotimes [j 100]
 ;;            (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
 ;;       => nil)
 
@@ -110,65 +110,65 @@
 
       ;; too slow without hints
       ;;
-      ;;(crit/bench (dotimes [i 1000] (dotimes [j 1000] (aget dd i j))))
-      ;;(crit/bench (dotimes [i 1000] (dotimes [j 1000] (-> dd (aget i) (aget j)))))
+      ;;(crit/bench (dotimes [i 100] (dotimes [j 100] (aget dd i j))))
+      ;;(crit/bench (dotimes [i 100] (dotimes [j 100] (-> dd (aget i) (aget j)))))
 
       (header "optimal hints on aget, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
 ;;       (once-1M  `(let [#^doubles a (aget #^objects dd i#)] (aget a j#)))
 ;;       (bench-1M `(let [#^doubles a (aget #^objects dd i#)] (aget a j#)))
 
       (header "optimal hints/macros on aget, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (deep-aget doubles dd i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (deep-aget doubles dd i j))))
 ;;       (once-1M  (deep-aget doubles dd i j))
 ;;       (bench-1M (deep-aget doubles dd i j))
 
       (header "optimal hints/macros/cg-aget! on aget, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (cg-aget! dd i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (cg-aget! dd i j))))
 ;;       (once-1M  (cg-aget! dd i j))
 ;;       (bench-1M (cg-aget! dd i j))
 
       (header "optimal hints/macros/f-cg-aget! on aget, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (f-cg-aget! dd i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (f-cg-aget! dd i j))))
 ;;       (once-1M  (f-cg-aget! dd i j))
 ;;       (bench-1M (f-cg-aget! dd i j))
 
       (header "optimal hints/macros/cg-aget! on aget, LJensen")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (lj-aget! dd i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (lj-aget! dd i j))))
 ;;       (once-1M  (lj-aget! dd i j))
 ;;       (bench-1M (lj-aget! dd i j))
@@ -188,72 +188,72 @@
 
       (header "improved hints on aset, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))))
 ;;       (once-1M  (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))
 ;;       (bench-1M (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))
 
       (header "optimal hints on aset, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))))
 ;;       (once-1M  (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))
 ;;       (bench-1M (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))
 
       (header "optimal hints/macros on aset, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (deep-aset doubles dd i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (deep-aset doubles dd i j 42.0))))
 ;;       (once-1M  (deep-aset doubles dd i j 42.0))
 ;;       (bench-1M (deep-aset doubles dd i j 42.0))
 
       (header "optimal hints/macros/cg-aset! on aset, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (cg-aset! dd i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (cg-aset! dd i j 42.0))))
 ;;       (once-1M  (cg-aset! dd i j 42.0))
 ;;       (bench-1M (cg-aset! dd i j 42.0))
 
       (header "optimal hints/macros/f-cg-aset! on aset, CGrande")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (f-cg-aset! dd i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (f-cg-aset! dd i j 42.0))))
 ;;       (once-1M  (f-cg-aset! dd i j 42.0))
 ;;       (bench-1M (f-cg-aset! dd i j 42.0))
 
       (header "optimal hints/macros/jl-aset! on aset, LJensen")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (lj-aset! dd i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 100]
+         (dotimes [j 100]
            (lj-aset! dd i j 42.0))))
 ;;       (once-1M  (lj-aset! dd i j 42.0))
 ;;       (bench-1M (lj-aset! dd i j 42.0))
