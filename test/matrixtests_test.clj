@@ -44,8 +44,12 @@
 (defmacro measure [expr]
   `(do
      (println (str '~expr))
-     (println "msecs : " (msecs ~expr))))
+     (time ~expr)))
 
+(defmacro p-measure [expr]
+  `(do
+     (println (str '~expr))
+     (println "msecs : " (msecs ~expr))))
 
 (defmacro bench-1M [expr]
   `(crit/bench (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
@@ -63,8 +67,8 @@
   `(time '~expr))
 
 
-(def nx 1000)
-(def ny 1000)
+(def nx 100)
+(def ny 100)
 (def nx-1 (dec nx))
 (def ny-1 (dec ny))
 (def nx-2 (dec nx-1))
@@ -73,13 +77,34 @@
 (def DD (clx/matrix (DoubleMatrix. ^"[[D" dd)))
 (def DCM (M/matrix dd))
 
-
-(fact "test" :test
-      (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
-           (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
-      => nil)
+;; (defmacro with-open
+;;   "bindings => [name init ...]
+;;
+;; Evaluates body in a try expression with names bound to the values
+;; of the inits, and a finally clause that calls (.close name) on each
+;; name in reverse order."
+;;   {:added "1.0"}
+;;   [bindings & body]
+;;   (assert-args
+;;      (vector? bindings) "a vector for its binding"
+;;      (even? (count bindings)) "an even number of forms in binding vector")
+;;   (cond
+;;     (= (count bindings) 0) `(do ~@body)
+;;     (symbol? (bindings 0)) `(let ~(subvec bindings 0 2)
+;;                               (try
+;;                                 (with-open ~(subvec bindings 2) ~@body)
+;;                                 (finally
+;;                                   (. ~(bindings 0) close))))
+;;     :else (throw (IllegalArgumentException.
+;;                    "with-open only allows Symbols in bindings"))))
+;;
+;;
+;; (fact "test" :test
+;;       (measure
+;;        (dotimes [i 1000]
+;;          (dotimes [j 1000]
+;;            (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
+;;       => nil)
 
 (fact "aget! variants" :aget
 
@@ -276,32 +301,43 @@
        (dotimes [i 10]
          (dotimes [j 10]
            (M/mget DCM i j))))
-;;       (once-1M  (M/mget DCM i j))
-;;       (bench-1M (M/mget DCM i j))
+      ;;       (once-1M  (M/mget DCM i j))
+      ;;       (bench-1M (M/mget DCM i j))
 
       (header "core.matrix mset")
       (measure
-       (dotimes [i 10]
-         (dotimes [j 10]
+       (dotimes [i 2]
+         (dotimes [j 2]
            (M/mset DCM i j 42.0))))
       (crit/bench
-       (dotimes [i 10]
-         (dotimes [j 10]
+       (dotimes [i 2]
+         (dotimes [j 2]
            (M/mset DCM i j 42.0))))
-;;       (once-1M  (M/mset DCM i j 42.0))
-;;       (bench-1M (M/mset DCM i j 42.0))
+      ;;       (once-1M  (M/mset DCM i j 42.0))
+      ;;       (bench-1M (M/mset DCM i j 42.0))
 
-      (header "core.matrix mset!")
-      (measure
-       (dotimes [i 10]
-         (dotimes [j 10]
-           (M/mset DCM i j 42.0))))
-      (crit/bench
-       (dotimes [i 10]
-         (dotimes [j 10]
-           (M/mset! DCM i j 42.0))))
-;;       (once-1M  (M/mset! DCM i j 42.0))
-;;       (bench-1M (M/mset! DCM i j 42.0))
+
+;; core.matrix/mset! is not yet implemented for Clatrix:
+;;
+;; IllegalArgumentException No implementation of method: :set-2d! of protocol:
+;; #'clojure.core.matrix.protocols/PIndexedSettingMutable found for class: clojure.lang.LazySeq
+;; clojure.core/-cache-protocol-fn (core_deftype.clj:541)
+;;
+      (try
+        (header "core.matrix mset!")
+        (measure
+         (dotimes [i 10]
+           (dotimes [j 10]
+             (M/mset! DCM i j 42.0))))
+        (catch Exception e (str "caught exception: " (.getMessage e))))
+      (try
+        (crit/bench
+         (dotimes [i 10]
+           (dotimes [j 10]
+             (M/mset! DCM i j 42.0))))
+        (catch Exception e (str "caught exception: " (.getMessage e))))
+      ;;       (once-1M  (M/mset! DCM i j 42.0))
+      ;;       (bench-1M (M/mset! DCM i j 42.0))
 
       true => truthy)
 
@@ -310,30 +346,30 @@
 
       (header "use Clatrix matrix")
       (measure
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-1 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-1 DD nx-2 ny-2)))
 ;;       (once-1K  (E-1 DD nx-2 ny-2))
 ;;       (bench-1K (E-1 DD nx-2 ny-2))
 
       (header "use \"[[D\", finally cast to Clatrix matrix")
       (measure
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-2 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-2 DD nx-2 ny-2)))
 ;;       (once-1K  (E-2 DD nx-2 ny-2))
 ;;       (bench-1K (E-2 DD nx-2 ny-2))
 
       (header "use Clatrix/from-indices")
       (measure
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-3 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 10]
+       (dotimes [i 2]
          (E-3 DD nx-2 ny-2)))
 ;;       (once-1K  (E-3 DD nx-2 ny-2))
 ;;       (bench-1K (E-3 DD nx-2 ny-2))
@@ -398,13 +434,18 @@
 ;;       (once-1K  (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
-      (header "use core.matrix/mmul")
-      (measure
-       (dotimes [i 10]
-         (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
-      (crit/bench
-       (dotimes [i 10]
-         (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+
+;; CompilerException java.lang.RuntimeException:
+;; No such var: M/mmul, compiling:(matrixtests_test.clj:394:1)
+;;
+;;       (header "use core.matrix/mmul")
+;;       (measure
+;;        (dotimes [i 10]
+;;          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (catch Exception e (str "caught exception: " (.getMessage e)))
+;;       (crit/bench
+;;        (dotimes [i 10]
+;;          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
