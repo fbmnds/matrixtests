@@ -240,24 +240,24 @@
 
       (header "Clatrix get")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (clx/get DD i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (clx/get DD i j))))
 ;;       (once-1M  (clx/get DD i j))
 ;;       (bench-1M (clx/get DD i j))
 
       (header "Clatrix set")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (clx/set DD i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (clx/set DD i j 42.0))))
 ;;       (once-1M  (clx/set DD i j 42.0))
 ;;       (bench-1M (clx/set DD i j 42.0))
@@ -269,36 +269,36 @@
 
       (header "core.matrix mget")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mget DCM i j))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mget DCM i j))))
 ;;       (once-1M  (M/mget DCM i j))
 ;;       (bench-1M (M/mget DCM i j))
 
       (header "core.matrix mset")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mset DCM i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mset DCM i j 42.0))))
 ;;       (once-1M  (M/mset DCM i j 42.0))
 ;;       (bench-1M (M/mset DCM i j 42.0))
 
       (header "core.matrix mset!")
       (measure
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mset DCM i j 42.0))))
       (crit/bench
-       (dotimes [i 1000]
-         (dotimes [j 1000]
+       (dotimes [i 10]
+         (dotimes [j 10]
            (M/mset! DCM i j 42.0))))
 ;;       (once-1M  (M/mset! DCM i j 42.0))
 ;;       (bench-1M (M/mset! DCM i j 42.0))
@@ -310,30 +310,30 @@
 
       (header "use Clatrix matrix")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-1 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-1 DD nx-2 ny-2)))
 ;;       (once-1K  (E-1 DD nx-2 ny-2))
 ;;       (bench-1K (E-1 DD nx-2 ny-2))
 
       (header "use \"[[D\", finally cast to Clatrix matrix")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-2 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-2 DD nx-2 ny-2)))
 ;;       (once-1K  (E-2 DD nx-2 ny-2))
 ;;       (bench-1K (E-2 DD nx-2 ny-2))
 
       (header "use Clatrix/from-indices")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-3 DD nx-2 ny-2)))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (E-3 DD nx-2 ny-2)))
 ;;       (once-1K  (E-3 DD nx-2 ny-2))
 ;;       (bench-1K (E-3 DD nx-2 ny-2))
@@ -345,30 +345,30 @@
 
       (header "use Clatrix/+")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       (header "use Clatrix/-")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       (header "use Clatrix/*")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
@@ -380,30 +380,30 @@
 
       (header "use core.matrix/add")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       (header "use core.matrix/sub")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       (header "use core.matrix/mmul")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
 ;;       (once-1K  (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 ;;       (bench-1K (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
@@ -415,30 +415,30 @@
 
       (header "use core.matrix/add")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
 ;;       (once-1K  (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 ;;       (bench-1K (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 
       (header "use core.matrix/sub")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
 ;;       (once-1K  (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 ;;       (bench-1K (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 
       (header "use core.matrix/mmul")
       (measure
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
       (crit/bench
-       (dotimes [i 1000]
+       (dotimes [i 10]
          (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
 ;;       (once-1K  (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 ;;       (bench-1K (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
