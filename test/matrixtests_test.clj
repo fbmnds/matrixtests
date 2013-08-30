@@ -3,7 +3,8 @@
             [matrixtests :refer :all]
             [criterium.core :as crit]
             [clatrix.core :as clx]
-            [clojure.core.matrix :as M])
+            [clojure.core.matrix :as M]
+            [clojure.string :as str])
   (:use midje.sweet)
   (:import [org.jblas DoubleMatrix]))
 
@@ -24,6 +25,12 @@
   (java.util.Locale/setDefault en_US))
 
 
+(defmacro header [x]
+  `(let [x# (str ~x)
+         l# (+ 2 (count x#))]
+     (println (str/join ["\n- " x#]))
+     (println (str/join (vec (repeat l# "-"))))
+     (println "once-only reference:")))
 
 (defmacro msecs
   "Like clojure.core/time, returns the time as a value
@@ -37,20 +44,20 @@
 (defmacro measure [expr]
   `(do
      (println (str '~expr))
-     (println ": " (msecs ~expr))))
+     (println "msecs : " (msecs ~expr))))
 
 
 (defmacro bench-1M [expr]
   `(crit/bench (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
 
 (defmacro once-1M [expr]
-  `(time (dotimes [i# 1000] (dotimes [j# 1000] '~expr))))
+  `(measure (dotimes [i# 1000] (dotimes [j# 1000] ~expr))))
 
 (defmacro bench-1K [expr]
   `(crit/bench (dotimes [i# 1000] '~expr)))
 
 (defmacro once-1K [expr]
-  `(time (dotimes [i# 1000] '~expr)))
+  `(measure (dotimes [i# 1000] '~expr)))
 
 (defmacro once [expr]
   `(time '~expr))
@@ -67,6 +74,13 @@
 (def DCM (M/matrix dd))
 
 
+(fact "test" :test
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
+      => nil)
+
 (fact "aget! variants" :aget
 
       ;; too slow without hints
@@ -74,35 +88,65 @@
       ;;(crit/bench (dotimes [i 1000] (dotimes [j 1000] (aget dd i j))))
       ;;(crit/bench (dotimes [i 1000] (dotimes [j 1000] (-> dd (aget i) (aget j)))))
 
-      (println "\n- optimal hints on aget, CGrande")
-      (println   "--------------------------------")
-      (println "once-only reference:")
-      (once-1M  (let [#^doubles a (aget #^objects dd 'i#)] (aget a 'j#)))
-      (bench-1M (let [#^doubles a (aget #^objects dd 'i#)] (aget a 'j#)))
+      (header "optimal hints on aget, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
+;;       (once-1M  `(let [#^doubles a (aget #^objects dd i#)] (aget a j#)))
+;;       (bench-1M `(let [#^doubles a (aget #^objects dd i#)] (aget a j#)))
 
-      (println "\n- optimal hints/macros on aget, CGrande")
-      (println   "---------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (deep-aget doubles dd 'i# 'j#))
-      (bench-1M (deep-aget doubles dd 'i# 'j#))
+      (header "optimal hints/macros on aget, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (deep-aget doubles dd i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (deep-aget doubles dd i j))))
+;;       (once-1M  (deep-aget doubles dd i j))
+;;       (bench-1M (deep-aget doubles dd i j))
 
-      (println "\n- optimal hints/macros/cg-aget! on aget, CGrande")
-      (println   "------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (cg-aget! dd 'i# 'j#))
-      (bench-1M (cg-aget! dd 'i# 'j#))
+      (header "optimal hints/macros/cg-aget! on aget, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (cg-aget! dd i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (cg-aget! dd i j))))
+;;       (once-1M  (cg-aget! dd i j))
+;;       (bench-1M (cg-aget! dd i j))
 
-      (println "\n- optimal hints/macros/f-cg-aget! on aget, CGrande")
-      (println   "--------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (f-cg-aget! dd 'i# 'j#))
-      (bench-1M (f-cg-aget! dd 'i# 'j#))
+      (header "optimal hints/macros/f-cg-aget! on aget, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (f-cg-aget! dd i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (f-cg-aget! dd i j))))
+;;       (once-1M  (f-cg-aget! dd i j))
+;;       (bench-1M (f-cg-aget! dd i j))
 
-      (println "\n- optimal hints/macros/cg-aget! on aget, LJensen")
-      (println   "------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (lj-aget! dd 'i# 'j#))
-      (bench-1M (lj-aget! dd 'i# 'j#))
+      (header "optimal hints/macros/cg-aget! on aget, LJensen")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (lj-aget! dd i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (lj-aget! dd i j))))
+;;       (once-1M  (lj-aget! dd i j))
+;;       (bench-1M (lj-aget! dd i j))
 
       true => truthy)
 
@@ -117,172 +161,287 @@
       ;;(println "- hints on aset, CGrande")
       ;;(bench-1M (-> #^objects dd (aget i) (aset j 42.0)))))
 
-      (println "\n- improved hints on aset, CGrande")
-      (println   "---------------------------------")
-      (println "once-only reference:")
-      (once-1M  (let [#^doubles a (aget #^objects dd 'i#)] (aset a 'j# 42.0)))
-      (bench-1M (let [#^doubles a (aget #^objects dd 'i#)] (aset a 'j# 42.0)))
+      (header "improved hints on aset, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))))
+;;       (once-1M  (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))
+;;       (bench-1M (let [#^doubles a (aget #^objects dd i)] (aset a j 42.0)))
 
-      (println "\n- optimal hints on aset, CGrande")
-      (println   "--------------------------------")
-      (println "once-only reference:")
-      (once-1M  (let [#^doubles a (aget #^objects dd 'i#)] (aset a 'j# (double 42.0))))
-      (bench-1M (let [#^doubles a (aget #^objects dd 'i#)] (aset a 'j# (double 42.0))))
+      (header "optimal hints on aset, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))))
+;;       (once-1M  (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))
+;;       (bench-1M (let [#^doubles a (aget #^objects dd i)] (aset a j (double 42.0))))
 
-      (println "\n- optimal hints/macros on aset, CGrande")
-      (println   "---------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (deep-aset doubles dd 'i# 'j# 42.0))
-      (bench-1M (deep-aset doubles dd 'i# 'j# 42.0))
+      (header "optimal hints/macros on aset, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (deep-aset doubles dd i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (deep-aset doubles dd i j 42.0))))
+;;       (once-1M  (deep-aset doubles dd i j 42.0))
+;;       (bench-1M (deep-aset doubles dd i j 42.0))
 
-      (println "\n- optimal hints/macros/cg-aset! on aset, CGrande")
-      (println   "------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (cg-aset! dd 'i# 'j# 42.0))
-      (bench-1M (cg-aset! dd 'i# 'j# 42.0))
+      (header "optimal hints/macros/cg-aset! on aset, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (cg-aset! dd i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (cg-aset! dd i j 42.0))))
+;;       (once-1M  (cg-aset! dd i j 42.0))
+;;       (bench-1M (cg-aset! dd i j 42.0))
 
-      (println "\n- optimal hints/macros/f-cg-aset! on aset, CGrande")
-      (println   "--------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (f-cg-aset! dd 'i# 'j# 42.0))
-      (bench-1M (f-cg-aset! dd 'i# 'j# 42.0))
+      (header "optimal hints/macros/f-cg-aset! on aset, CGrande")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (f-cg-aset! dd i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (f-cg-aset! dd i j 42.0))))
+;;       (once-1M  (f-cg-aset! dd i j 42.0))
+;;       (bench-1M (f-cg-aset! dd i j 42.0))
 
-      (println "\n- optimal hints/macros/jl-aset! on aset, LJensen")
-      (println   "------------------------------------------------")
-      (println "once-only reference:")
-      (once-1M  (lj-aset! dd 'i# 'j# 42.0))
-      (bench-1M (lj-aset! dd 'i# 'j# 42.0))
+      (header "optimal hints/macros/jl-aset! on aset, LJensen")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (lj-aset! dd i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (lj-aset! dd i j 42.0))))
+;;       (once-1M  (lj-aset! dd i j 42.0))
+;;       (bench-1M (lj-aset! dd i j 42.0))
 
       true => truthy)
 
 
 (fact "Clatrix" :clx
 
-      (println "\n- Clatrix get")
-      (println   "-------------")
-      (println "once-only reference:")
-      (once-1M  (clx/get DD 'i# 'j#))
-      (bench-1M (clx/get DD 'i# 'j#))
+      (header "Clatrix get")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (clx/get DD i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (clx/get DD i j))))
+;;       (once-1M  (clx/get DD i j))
+;;       (bench-1M (clx/get DD i j))
 
-      (println "\n- Clatrix set")
-      (println   "-------------")
-      (println "once-only reference:")
-      (once-1M  (clx/set DD 'i# 'j# 42.0))
-      (bench-1M (clx/set DD 'i# 'j# 42.0))
+      (header "Clatrix set")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (clx/set DD i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (clx/set DD i j 42.0))))
+;;       (once-1M  (clx/set DD i j 42.0))
+;;       (bench-1M (clx/set DD i j 42.0))
 
       true => truthy)
 
 
 (fact "core.matrix" :mikera
 
-      (println "\n- core.matrix mget")
-      (println   "------------------")
-      (once-1M  (M/mget DCM 'i# 'j#))
-      (println "once-only reference:")
-      (bench-1M (M/mget DCM 'i# 'j#))
+      (header "core.matrix mget")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mget DCM i j))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mget DCM i j))))
+;;       (once-1M  (M/mget DCM i j))
+;;       (bench-1M (M/mget DCM i j))
 
-      (println "\n- core.matrix mset")
-      (println   "------------------")
-      (once-1M  (M/mset DCM 'i# 'j# 42.0))
-      (bench-1M (M/mset DCM 'i# 'j# 42.0))
+      (header "core.matrix mset")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mset DCM i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mset DCM i j 42.0))))
+;;       (once-1M  (M/mset DCM i j 42.0))
+;;       (bench-1M (M/mset DCM i j 42.0))
 
-      (println "\n- core.matrix mset!")
-      (println   "-------------------")
-      (println "once-only reference:")
-      (once-1M  (M/mset! DCM 'i# 'j# 42.0))
-      (bench-1M (M/mset! DCM 'i# 'j# 42.0))
+      (header "core.matrix mset!")
+      (measure
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mset DCM i j 42.0))))
+      (crit/bench
+       (dotimes [i 1000]
+         (dotimes [j 1000]
+           (M/mset! DCM i j 42.0))))
+;;       (once-1M  (M/mset! DCM i j 42.0))
+;;       (bench-1M (M/mset! DCM i j 42.0))
 
       true => truthy)
 
 
 (fact "get submatrix Clatrix / Clatrix" :submatrix
 
-      (println "\n- use Clatrix matrix")
-      (println   "--------------------")
-      (println "once-only reference:")
-      (once-1K  (E-1 DD nx-2 ny-2))
-      (bench-1K (E-1 DD nx-2 ny-2))
+      (header "use Clatrix matrix")
+      (measure
+       (dotimes [i 1000]
+         (E-1 DD nx-2 ny-2)))
+      (crit/bench
+       (dotimes [i 1000]
+         (E-1 DD nx-2 ny-2)))
+;;       (once-1K  (E-1 DD nx-2 ny-2))
+;;       (bench-1K (E-1 DD nx-2 ny-2))
 
-      (println "\n- use \"[[D\", finally cast to Clatrix matrix")
-      (println   "---------------------------------------------")
-      (println "once-only reference:")
-      (once-1K  (E-2 DD nx-2 ny-2))
-      (bench-1K (E-2 DD nx-2 ny-2))
+      (header "use \"[[D\", finally cast to Clatrix matrix")
+      (measure
+       (dotimes [i 1000]
+         (E-2 DD nx-2 ny-2)))
+      (crit/bench
+       (dotimes [i 1000]
+         (E-2 DD nx-2 ny-2)))
+;;       (once-1K  (E-2 DD nx-2 ny-2))
+;;       (bench-1K (E-2 DD nx-2 ny-2))
 
-      (println "\n- use Clatrix/from-indices")
-      (println   "--------------------------")
-      (println "once-only reference:")
-      (once-1K  (E-3 DD nx-2 ny-2))
-      (bench-1K (E-3 DD nx-2 ny-2))
+      (header "use Clatrix/from-indices")
+      (measure
+       (dotimes [i 1000]
+         (E-3 DD nx-2 ny-2)))
+      (crit/bench
+       (dotimes [i 1000]
+         (E-3 DD nx-2 ny-2)))
+;;       (once-1K  (E-3 DD nx-2 ny-2))
+;;       (bench-1K (E-3 DD nx-2 ny-2))
 
       true => truthy)
 
 
 (fact "Clatrix +/-/* on Clatrix matrix" :clxops
 
-      (println "\n- use Clatrix/+")
-      (println   "---------------")
-      (println "once-only reference:")
-      (once-1K  (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use Clatrix/+")
+      (measure
+       (dotimes [i 1000]
+         (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
-      (println "\n- use Clatrix/-")
-      (println   "---------------")
-      (println "once-only reference:")
-      (once-1K  (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use Clatrix/-")
+      (measure
+       (dotimes [i 1000]
+         (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
-      (println "\n- use Clatrix/*")
-      (println   "---------------")
-      (println "once-only reference:")
-      (once-1K  (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use Clatrix/*")
+      (measure
+       (dotimes [i 1000]
+         (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       true => truthy)
 
 
 (fact "core.matrix add/sub/mmul on Clatrix matrix" :mtxclxops
 
-      (println "\n- use core.matrix/add")
-      (println   "---------------------")
-      (println "once-only reference:")
-      (once-1K  (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use core.matrix/add")
+      (measure
+       (dotimes [i 1000]
+         (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
-      (println "\n- use core.matrix/sub")
-      (println   "---------------------")
-      (println "once-only reference:")
-      (once-1K  (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use core.matrix/sub")
+      (measure
+       (dotimes [i 1000]
+         (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
-      (println "\n- use core.matrix/mmul")
-      (println   "----------------------")
-      (println "once-only reference:")
-      (once-1K  (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-      (bench-1K (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+      (header "use core.matrix/mmul")
+      (measure
+       (dotimes [i 1000]
+         (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;       (once-1K  (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;       (bench-1K (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
 
       true => truthy)
 
 
 (fact "core.matrix add/sub/mmul on core.matrix/matrix" :mtxops
 
-      (println "\n- use core.matrix/add")
-      (println   "---------------------")
-      (println "once-only reference:")
-      (once-1K  (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-      (bench-1K (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+      (header "use core.matrix/add")
+      (measure
+       (dotimes [i 1000]
+         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+;;       (once-1K  (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+;;       (bench-1K (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 
-      (println "\n- use core.matrix/sub")
-      (println   "---------------------")
-      (println "once-only reference:")
-      (once-1K  (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-      (bench-1K (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+      (header "use core.matrix/sub")
+      (measure
+       (dotimes [i 1000]
+         (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+;;       (once-1K  (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+;;       (bench-1K (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 
-      (println "\n- use core.matrix/mmul")
-      (println   "----------------------")
-      (println "once-only reference:")
-      (once-1K  (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-      (bench-1K (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+      (header "use core.matrix/mmul")
+      (measure
+       (dotimes [i 1000]
+         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+      (crit/bench
+       (dotimes [i 1000]
+         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+;;       (once-1K  (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+;;       (bench-1K (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
 
       true => truthy)
 
