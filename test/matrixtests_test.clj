@@ -96,7 +96,7 @@
 (def start (. System (nanoTime)))
 
 (fact "test" :test
-      (once-2 (println (let [#^doubles a (aget #^objects dd i)] (aget a 0))))
+      (once-x 2 (println (let [#^doubles a (aget #^objects dd i)] (aget a 0))))
       => nil)
 
 
