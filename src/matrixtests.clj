@@ -83,8 +83,8 @@
   `(submatrix-2 ~z [[1 ~nx] [1 ~ny]]))
 
 
-(defn submatrix-3 [M [[a nx] [b ny]]]
-  `(clx/from-indices ~nx ~ny (fn [x y] (clx/get ~M (+ ~a x) (+ ~b y)))))
+(defmacro submatrix-3 [M [[a nx] [b ny]]]
+  `(clx/from-indices ~nx ~ny (fn [x# y#] (clx/get ~M (+ ~a x#) (+ ~b y#)))))
 
 (defmacro E-3 [z nx ny]
   `(submatrix-3 ~z [[1 ~nx] [1 ~ny]]))
