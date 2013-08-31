@@ -25,11 +25,16 @@
   (java.util.Locale/setDefault en_US))
 
 
-(defmacro header [x]
+(defmacro underline [x]
   `(let [x# (str ~x)
-         l# (+ 2 (count x#))]
-     (println (str/join ["\n- " x#]))
-     (println (str/join (vec (repeat l# "-"))))
+         l# (count x#)]
+     (println x#)
+     (println (str/join (vec (repeat l# "-"))))))
+
+(defmacro header [x]
+  `(do
+     (println)
+     (underline (str/join ["- " (str ~x)]))
      (println "once-only reference:")))
 
 (defmacro msecs
@@ -105,6 +110,9 @@
 ;;          (dotimes [j 100]
 ;;            (let [#^doubles a (aget #^objects dd i)] (aget a j)))))
 ;;       => nil)
+
+
+(def start (. System (nanoTime)))
 
 (fact "aget! variants" :aget
 
@@ -329,17 +337,17 @@
          (dotimes [i 10]
            (dotimes [j 10]
              (M/mset! DCM i j 42.0))))
-        (catch Exception e (str "caught exception: " (.getMessage e))))
-      (try
-        (crit/bench
-         (dotimes [i 10]
-           (dotimes [j 10]
-             (M/mset! DCM i j 42.0))))
-        (catch Exception e (str "caught exception: " (.getMessage e))))
-      ;;       (once-1M  (M/mset! DCM i j 42.0))
-      ;;       (bench-1M (M/mset! DCM i j 42.0))
+        (catch Exception e (println "caught exception: " (str (.getMessage e)))))
+;;       (try
+;;         (crit/bench
+;;          (dotimes [i 10]
+;;            (dotimes [j 10]
+;;              (M/mset! DCM i j 42.0))))
+;;         (catch Exception e (println "caught exception: " (str (.getMessage e)))))
+;;       (once-1M  (M/mset! DCM i j 42.0))
+;;       (bench-1M (M/mset! DCM i j 42.0))
 
-      true => truthy)
+        true) => truthy)
 
 
 (fact "get submatrix Clatrix / Clatrix" :submatrix
@@ -417,22 +425,22 @@
       (header "use core.matrix/add")
       (measure
        (dotimes [i 10]
-         (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+         (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
       (crit/bench
        (dotimes [i 10]
-         (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
-;;       (once-1K  (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-;;       (bench-1K (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+         (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
+;;       (once-1K  (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+;;       (bench-1K (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
 
       (header "use core.matrix/sub")
       (measure
        (dotimes [i 10]
-         (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+         (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
       (crit/bench
        (dotimes [i 10]
-         (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
-;;       (once-1K  (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-;;       (bench-1K (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+         (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
+;;       (once-1K  (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+;;       (bench-1K (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
 
 
 ;; CompilerException java.lang.RuntimeException:
@@ -441,13 +449,13 @@
 ;;       (header "use core.matrix/mmul")
 ;;       (measure
 ;;        (dotimes [i 10]
-;;          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
+;;          (M/mmul (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
 ;;       (catch Exception e (str "caught exception: " (.getMessage e)))
 ;;       (crit/bench
 ;;        (dotimes [i 10]
-;;          (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2))))
-;;       (once-1K  (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
-;;       (bench-1K (M/mmul (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+;;          (M/mmul (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2))))
+;;       (once-1K  (M/mmul (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+;;       (bench-1K (M/mmul (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
 
       true => truthy)
 
@@ -457,34 +465,37 @@
       (header "use core.matrix/add")
       (measure
        (dotimes [i 10]
-         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+         (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
       (crit/bench
        (dotimes [i 10]
-         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
-;;       (once-1K  (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-;;       (bench-1K (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+         (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
+;;       (once-1K  (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
+;;       (bench-1K (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
 
       (header "use core.matrix/sub")
       (measure
        (dotimes [i 10]
-         (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+         (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
       (crit/bench
        (dotimes [i 10]
-         (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
-;;       (once-1K  (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-;;       (bench-1K (M/sub (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+         (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
+;;       (once-1K  (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
+;;       (bench-1K (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
 
       (header "use core.matrix/mmul")
       (measure
        (dotimes [i 10]
-         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
+         (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
       (crit/bench
        (dotimes [i 10]
-         (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2))))
-;;       (once-1K  (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
-;;       (bench-1K (M/mmul (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+         (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2))))
+;;       (once-1K  (M/mmul (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
+;;       (bench-1K (M/mmul (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
 
       true => truthy)
+
+(underline "Total elapsed time for all tests")
+(println " : " (/ (double (- (. System (nanoTime)) start)) 1000000.0) " ms.")
 
 
 ;; restore settings

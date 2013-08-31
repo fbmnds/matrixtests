@@ -1,0 +1,423 @@
+[36m= Namespace matrixtests-test[0m
+[36mChecking aget! variants[0m
+
+- optimal hints on aget, CGrande
+--------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (let [a (aget dd i)] (aget a j))))
+"Elapsed time: 3.263045 msecs"
+WARNING: Final GC required 62.96381890278205 % of runtime
+WARNING: Final GC required 1.067864197935162 % of runtime
+Evaluation count : 46200 in 60 samples of 770 calls.
+             Execution time mean : 735.415649 µs
+    Execution time std-deviation : 646.635142 µs
+   Execution time lower quantile : 134.638138 µs ( 2.5%)
+   Execution time upper quantile : 1.528018 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- optimal hints/macros on aget, CGrande
+---------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (deep-aget doubles dd i j)))
+"Elapsed time: 2.903607 msecs"
+WARNING: Final GC required 5.7110377647093395 % of runtime
+Evaluation count : 44700 in 60 samples of 745 calls.
+             Execution time mean : 1.411319 ms
+    Execution time std-deviation : 63.447964 µs
+   Execution time lower quantile : 1.295554 ms ( 2.5%)
+   Execution time upper quantile : 1.450204 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 12 (20.0000 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 31.9017 % Variance is moderately inflated by outliers
+
+- optimal hints/macros/cg-aget! on aget, CGrande
+------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (cg-aget! dd i j)))
+"Elapsed time: 2.942637 msecs"
+Evaluation count : 435240 in 60 samples of 7254 calls.
+             Execution time mean : 1.140000 ms
+    Execution time std-deviation : 539.940751 µs
+   Execution time lower quantile : 134.674907 µs ( 2.5%)
+   Execution time upper quantile : 1.470703 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 14 outliers in 60 samples (23.3333 %)
+	low-severe	 13 (21.6667 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.2211 % Variance is severely inflated by outliers
+
+- optimal hints/macros/f-cg-aget! on aget, CGrande
+--------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (f-cg-aget! dd i j)))
+"Elapsed time: 4.542115 msecs"
+WARNING: Final GC required 6.087860593929265 % of runtime
+Evaluation count : 7500 in 60 samples of 125 calls.
+             Execution time mean : 8.316305 ms
+    Execution time std-deviation : 464.726347 µs
+   Execution time lower quantile : 7.626149 ms ( 2.5%)
+   Execution time upper quantile : 9.112556 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- optimal hints/macros/cg-aget! on aget, LJensen
+------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (lj-aget! dd i j)))
+"Elapsed time: 78.179644 msecs"
+Evaluation count : 68460 in 60 samples of 1141 calls.
+             Execution time mean : 1.446374 ms
+    Execution time std-deviation : 430.144453 µs
+   Execution time lower quantile : 272.163737 µs ( 2.5%)
+   Execution time upper quantile : 2.610453 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 8 outliers in 60 samples (13.3333 %)
+	low-severe	 3 (5.0000 %)
+	low-mild	 5 (8.3333 %)
+ Variance from outliers : 96.3915 % Variance is severely inflated by outliers
+[36mChecking aset! variants[0m
+
+- improved hints on aset, CGrande
+---------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (let [a (aget dd i)] (aset a j 42.0))))
+"Elapsed time: 3.262697 msecs"
+WARNING: Final GC required 11.77439342600937 % of runtime
+Evaluation count : 22200 in 60 samples of 370 calls.
+             Execution time mean : 2.382545 ms
+    Execution time std-deviation : 1.119794 ms
+   Execution time lower quantile : 272.328849 µs ( 2.5%)
+   Execution time upper quantile : 3.259312 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 12 outliers in 60 samples (20.0000 %)
+	low-severe	 12 (20.0000 %)
+ Variance from outliers : 98.2193 % Variance is severely inflated by outliers
+
+- optimal hints on aset, CGrande
+--------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (let [a (aget dd i)] (aset a j (double 42.0)))))
+"Elapsed time: 3.044763 msecs"
+WARNING: Final GC required 11.465982039203041 % of runtime
+Evaluation count : 21960 in 60 samples of 366 calls.
+             Execution time mean : 2.248106 ms
+    Execution time std-deviation : 1.131885 ms
+   Execution time lower quantile : 279.900929 µs ( 2.5%)
+   Execution time upper quantile : 3.273087 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 14 outliers in 60 samples (23.3333 %)
+	low-severe	 14 (23.3333 %)
+ Variance from outliers : 98.2340 % Variance is severely inflated by outliers
+
+- optimal hints/macros on aset, CGrande
+---------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (deep-aset doubles dd i j 42.0)))
+"Elapsed time: 3.112966 msecs"
+WARNING: Final GC required 7.284120981722136 % of runtime
+Evaluation count : 22080 in 60 samples of 368 calls.
+             Execution time mean : 1.848233 ms
+    Execution time std-deviation : 1.051587 ms
+   Execution time lower quantile : 282.169842 µs ( 2.5%)
+   Execution time upper quantile : 3.404120 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- optimal hints/macros/cg-aset! on aset, CGrande
+------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (cg-aset! dd i j 42.0)))
+"Elapsed time: 3.024542 msecs"
+WARNING: Final GC required 7.2314208279536984 % of runtime
+Evaluation count : 42720 in 60 samples of 712 calls.
+             Execution time mean : 957.614030 µs
+    Execution time std-deviation : 635.057174 µs
+   Execution time lower quantile : 141.778816 µs ( 2.5%)
+   Execution time upper quantile : 1.515967 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- optimal hints/macros/f-cg-aset! on aset, CGrande
+--------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (f-cg-aset! dd i j 42.0)))
+"Elapsed time: 100.851462 msecs"
+Evaluation count : 7440 in 60 samples of 124 calls.
+             Execution time mean : 6.604349 ms
+    Execution time std-deviation : 3.630459 ms
+   Execution time lower quantile : 865.799331 µs ( 2.5%)
+   Execution time upper quantile : 9.633707 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- optimal hints/macros/jl-aset! on aset, LJensen
+------------------------------------------------
+once-only reference:
+(dotimes [i 100] (dotimes [j 100] (lj-aset! dd i j 42.0)))
+"Elapsed time: 3.300878 msecs"
+WARNING: Final GC required 4.702241654075833 % of runtime
+Evaluation count : 43500 in 60 samples of 725 calls.
+             Execution time mean : 1.466927 ms
+    Execution time std-deviation : 78.387550 µs
+   Execution time lower quantile : 1.330899 ms ( 2.5%)
+   Execution time upper quantile : 1.634391 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 16 outliers in 60 samples (26.6667 %)
+	low-severe	 11 (18.3333 %)
+	low-mild	 5 (8.3333 %)
+ Variance from outliers : 38.5408 % Variance is moderately inflated by outliers
+[36mChecking Clatrix[0m
+
+- Clatrix get
+-------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (clx/get DD i j)))
+"Elapsed time: 121.133779 msecs"
+WARNING: Final GC required 7.74849962976734 % of runtime
+Evaluation count : 1680 in 60 samples of 28 calls.
+             Execution time mean : 24.045995 ms
+    Execution time std-deviation : 16.505535 ms
+   Execution time lower quantile : 3.333535 ms ( 2.5%)
+   Execution time upper quantile : 39.269954 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+- Clatrix set
+-------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (clx/set DD i j 42.0)))
+"Elapsed time: 0.608869 msecs"
+WARNING: Final GC required 8.100207878757173 % of runtime
+Evaluation count : 1577640 in 60 samples of 26294 calls.
+             Execution time mean : 23.362140 µs
+    Execution time std-deviation : 15.871100 µs
+   Execution time lower quantile : 1.593946 µs ( 2.5%)
+   Execution time upper quantile : 38.675328 µs (97.5%)
+                   Overhead used : 2.046793 µs
+[36mChecking core.matrix[0m
+
+- core.matrix mget
+------------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (M/mget DCM i j)))
+"Elapsed time: 3.594987 msecs"
+Evaluation count : 83460 in 60 samples of 1391 calls.
+             Execution time mean : 747.185700 µs
+    Execution time std-deviation : 108.806623 µs
+   Execution time lower quantile : 464.034068 µs ( 2.5%)
+   Execution time upper quantile : 850.712755 µs (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 9 (15.0000 %)
+	low-mild	 1 (1.6667 %)
+	high-mild	 3 (5.0000 %)
+ Variance from outliers : 84.1127 % Variance is severely inflated by outliers
+
+- core.matrix mset
+------------------
+once-only reference:
+(dotimes [i 2] (dotimes [j 2] (M/mset DCM i j 42.0)))
+"Elapsed time: 71.147302 msecs"
+Evaluation count : 16200 in 60 samples of 270 calls.
+             Execution time mean : 33.830149 ms
+    Execution time std-deviation : 11.030529 ms
+   Execution time lower quantile : 3.905062 ms ( 2.5%)
+   Execution time upper quantile : 39.258536 ms (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 15 outliers in 60 samples (25.0000 %)
+	low-severe	 10 (16.6667 %)
+	low-mild	 5 (8.3333 %)
+ Variance from outliers : 96.4378 % Variance is severely inflated by outliers
+
+- core.matrix mset!
+-------------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (M/mset! DCM i j 42.0)))
+[36mChecking get submatrix Clatrix / Clatrix[0m
+
+- use Clatrix matrix
+--------------------
+once-only reference:
+(dotimes [i 2] (E-1 DD nx-2 ny-2))
+"Elapsed time: 778.477928 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.878576 sec
+    Execution time std-deviation : 2.282647 sec
+   Execution time lower quantile : 739.586388 ms ( 2.5%)
+   Execution time upper quantile : 8.097366 sec (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 9 outliers in 60 samples (15.0000 %)
+	low-severe	 8 (13.3333 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 96.4457 % Variance is severely inflated by outliers
+
+- use "[[D", finally cast to Clatrix matrix
+-------------------------------------------
+once-only reference:
+(dotimes [i 2] (E-2 DD nx-2 ny-2))
+"Elapsed time: 7809.960007 msecs"
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 6.966344 sec
+    Execution time std-deviation : 2.527983 sec
+   Execution time lower quantile : 716.739101 ms ( 2.5%)
+   Execution time upper quantile : 9.018345 sec (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 9 outliers in 60 samples (15.0000 %)
+	low-severe	 8 (13.3333 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.1421 % Variance is severely inflated by outliers
+
+- use Clatrix/from-indices
+--------------------------
+once-only reference:
+(dotimes [i 2] (E-3 DD nx-2 ny-2))
+"Elapsed time: 0.635031 msecs"
+Evaluation count : 3261060 in 60 samples of 54351 calls.
+             Execution time mean : 164.513614 µs
+    Execution time std-deviation : 55.789720 µs
+   Execution time lower quantile : 16.166835 µs ( 2.5%)
+   Execution time upper quantile : 192.017424 µs (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 10 outliers in 60 samples (16.6667 %)
+	low-severe	 10 (16.6667 %)
+ Variance from outliers : 96.4551 % Variance is severely inflated by outliers
+[36mChecking Clatrix +/-/* on Clatrix matrix[0m
+
+- use Clatrix/+
+---------------
+once-only reference:
+(dotimes [i 10] (clx/+ (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+"Elapsed time: 45887.223984 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 58.810632 sec
+    Execution time std-deviation : 28.208640 sec
+   Execution time lower quantile : 7.173303 sec ( 2.5%)
+   Execution time upper quantile : 1.333700 min (97.5%)
+                   Overhead used : 2.046793 µs
+
+- use Clatrix/-
+---------------
+once-only reference:
+(dotimes [i 10] (clx/- (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+"Elapsed time: 78715.159797 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.035496 min
+    Execution time std-deviation : 25.117678 sec
+   Execution time lower quantile : 7.258408 sec ( 2.5%)
+   Execution time upper quantile : 1.334558 min (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 8 outliers in 60 samples (13.3333 %)
+	low-severe	 8 (13.3333 %)
+ Variance from outliers : 98.1793 % Variance is severely inflated by outliers
+
+- use Clatrix/*
+---------------
+once-only reference:
+(dotimes [i 10] (clx/* (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+"Elapsed time: 80165.514268 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.066738 min
+    Execution time std-deviation : 22.193556 sec
+   Execution time lower quantile : 8.261193 sec ( 2.5%)
+   Execution time upper quantile : 1.328908 min (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 4 outliers in 60 samples (6.6667 %)
+	low-severe	 4 (6.6667 %)
+ Variance from outliers : 96.4643 % Variance is severely inflated by outliers
+[36mChecking core.matrix add/sub/mmul on Clatrix matrix[0m
+
+- use core.matrix/add
+---------------------
+once-only reference:
+(dotimes [i 10] (M/add (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+"Elapsed time: 76434.171445 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 56.520749 sec
+    Execution time std-deviation : 29.560316 sec
+   Execution time lower quantile : 7.429545 sec ( 2.5%)
+   Execution time upper quantile : 1.441377 min (97.5%)
+                   Overhead used : 2.046793 µs
+
+- use core.matrix/sub
+---------------------
+once-only reference:
+(dotimes [i 10] (M/sub (E-1 DD nx-2 ny-2) (E-1 DD nx-2 ny-2)))
+"Elapsed time: 78915.861947 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.089376 min
+    Execution time std-deviation : 23.663500 sec
+   Execution time lower quantile : 7.036343 sec ( 2.5%)
+   Execution time upper quantile : 1.378452 min (97.5%)
+                   Overhead used : 2.046793 µs
+
+Found 7 outliers in 60 samples (11.6667 %)
+	low-severe	 7 (11.6667 %)
+ Variance from outliers : 98.1412 % Variance is severely inflated by outliers
+[36mChecking core.matrix add/sub/mmul on core.matrix/matrix[0m
+
+- use core.matrix/add
+---------------------
+once-only reference:
+(dotimes [i 10] (M/add (E-1 DCM nx-2 ny-2) (E-1 DCM nx-2 ny-2)))
+Exception in thread "main" java.lang.ClassCastException: clojure.lang.LazySeq cannot be cast to clatrix.core.Matrix
+	at clatrix.core$me.invoke(core.clj:156)
+	at clatrix.core$get.invoke(core.clj:159)
+	at matrixtests_test$eval14718$base_function__5062__auto____14719$fn__14720$fn__14721.invoke(matrixtests_test.clj:455)
+	at matrixtests_test$eval14718$base_function__5062__auto____14719$fn__14720.invoke(matrixtests_test.clj:455)
+	at midje.util.thread_safe_var_nesting$with_altered_roots_STAR_.invoke(thread_safe_var_nesting.clj:32)
+	at matrixtests_test$eval14718$base_function__5062__auto____14719.invoke(matrixtests_test.clj:455)
+	at clojure.lang.AFn.applyToHelper(AFn.java:159)
+	at clojure.lang.AFn.applyTo(AFn.java:151)
+	at clojure.lang.AFunction$1.doInvoke(AFunction.java:29)
+	at clojure.lang.RestFn.invoke(RestFn.java:397)
+	at midje.checking.facts$check_one$fn__5022.invoke(facts.clj:31)
+	at midje.checking.facts$check_one.invoke(facts.clj:30)
+	at midje.checking.facts$creation_time_check.invoke(facts.clj:35)
+	at matrixtests_test$eval14718.invoke(matrixtests_test.clj:455)
+	at clojure.lang.Compiler.eval(Compiler.java:6619)
+	at clojure.lang.Compiler.load(Compiler.java:7064)
+	at clojure.lang.RT.loadResourceScript(RT.java:370)
+	at clojure.lang.RT.loadResourceScript(RT.java:361)
+	at clojure.lang.RT.load(RT.java:440)
+	at clojure.lang.RT.load(RT.java:411)
+	at clojure.core$load$fn__5018.invoke(core.clj:5530)
+	at clojure.core$load.doInvoke(core.clj:5529)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at clojure.core$load_one.invoke(core.clj:5336)
+	at clojure.core$load_lib$fn__4967.invoke(core.clj:5375)
+	at clojure.core$load_lib.doInvoke(core.clj:5374)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invoke(core.clj:619)
+	at clojure.core$load_libs.doInvoke(core.clj:5413)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invoke(core.clj:619)
+	at clojure.core$require.doInvoke(core.clj:5496)
+	at clojure.lang.RestFn.invoke(RestFn.java:421)
+	at midje.repl$load_facts$fn__6210.invoke(repl.clj:206)
+	at midje.repl$load_facts.doInvoke(repl.clj:192)
+	at clojure.lang.RestFn.invoke(RestFn.java:397)
+	at user$eval6272.invoke(NO_SOURCE_FILE:1)
+	at clojure.lang.Compiler.eval(Compiler.java:6619)
+	at clojure.lang.Compiler.eval(Compiler.java:6609)
+	at clojure.lang.Compiler.eval(Compiler.java:6582)
+	at clojure.core$eval.invoke(core.clj:2852)
+	at clojure.main$eval_opt.invoke(main.clj:308)
+	at clojure.main$initialize.invoke(main.clj:327)
+	at clojure.main$null_opt.invoke(main.clj:362)
+	at clojure.main$main.doInvoke(main.clj:440)
+	at clojure.lang.RestFn.invoke(RestFn.java:421)
+	at clojure.lang.Var.invoke(Var.java:419)
+	at clojure.lang.AFn.applyToHelper(AFn.java:163)
+	at clojure.lang.Var.applyTo(Var.java:532)
+	at clojure.main.main(main.java:37)
+Subprocess failed
