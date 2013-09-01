@@ -5,7 +5,8 @@
             [clatrix.core :as clx]
             [clojure.core.matrix :as M]
             [clojure.string :as str]
-            [clojure.inspector :as insp])
+            [clojure.inspector :as insp]
+            [clojure.tools.macro :as mac])
   (:use midje.sweet)
   (:import [org.jblas DoubleMatrix]))
 
@@ -88,6 +89,46 @@
 (defmacro bench [expr]
   `(crit/bench ~expr))
 
+;; https://github.com/amalloy/amalloy-utils/blob/master/src/amalloy/utils/macro.clj
+;;
+(defn- partition-params [argvec actual-args]
+  (if (some #{'&} argvec)
+    [actual-args] ; one seq with all args
+    (vec (map vec (partition (count argvec) actual-args)))))
+
+(defmacro anon-macro
+  "Define, and then immediately use, an anonymous macro. For
+example, (anon-macro [x y] `(def ~x ~y) myconst 10) expands to (def
+myconst 10)."
+  ([args macro-body & body]
+     `(mac/macrolet [(name# ~args ~macro-body)]
+                    (name# ~@body))))
+
+(defmacro macro-do
+  "Wrap a list of forms with an anonymous macro, which partitions the
+forms into chunks of the right size for the macro's arglists. The
+macro's body will be called once for every N items in the args
+list, where N is the number of arguments the macro accepts. The
+result of all expansions will be glued together in a (do ...) form.
+
+Really, the macro is only called once, and is adjusted to expand
+into a (do ...) form, but this is probably an implementation detail
+that I'm not sure how a client could detect.
+
+For example,
+(macro-do [[f & args]]
+          `(def ~(symbol (str \"basic-\" f))
+             (partial ~f ~@args))
+          [f 'test] [y 1 2 3])
+expands into (do
+               (def basic-f (partial f 'test))
+               (def basic-y (partial y 1 2 3)))"
+  ([macro-args body & args]
+     `(anon-macro [arg#]
+        (cons 'do
+              (for [~macro-args arg#]
+                ~body))
+        ~(partition-params macro-args args))))
 
 (def start (. System (nanoTime)))
 
@@ -216,9 +257,37 @@
        (M/mul 2. CT) => CMT*2)
 
  (println)
- (underline "testing submatrices")
+ (underline "testing submatrices in expressions")
+;; does not cooperate with 'fact'
+;; seems to be a 'fact' problem
+;;
+;;  (macro-do
+;;   [expr res]
+;;   `(fact (str '~expr) ~expr => ~res)
+;;
+;;   (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT)) CT*T
+;;   (clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT)) CT*T
+;;   (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT)) CT*T
+;;   (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT)) CMT*T)
 
- )
+ (fact "(clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT))"
+       (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT))
+       => CT*T)
+
+ (fact "(clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT))"
+       (clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT))
+       => CT*T)
+
+
+ (fact "(clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT))"
+       (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT))
+       => CT*T)
+
+ (fact "(M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))"
+       (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))
+       => CMT*T)
+
+ (println "\nfunctional tests done.\n"))
 
 (fact "aget! variants" :aget
 
@@ -306,7 +375,7 @@
       (once-nx-ny  (M/mget DCM i j))
       (bench-nx-ny (M/mget DCM i j))
 
-      (header "core.matrix mset")
+      (header "core.matrix mset is prohibitively slow")
       (once-nx-ny  (M/mset DCM i j 42.0))
       ;; (bench-nx-ny (M/mset DCM i j 42.0))
 
@@ -329,62 +398,63 @@
       (bench-x 2 (E-2 DD nx-2 ny-2))
 
       (header "use Clatrix/from-indices")
-      (once-x  100 (E-3 DD nx-2 ny-2))
-      (bench-x 100 (E-3 DD nx-2 ny-2))
+      (once-x  2 (E-3 DD nx-2 ny-2))
+      (bench-x 2 (E-3 DD nx-2 ny-2))
 
       true => truthy)
 
 
-(fact "Clatrix +/-/* on Clatrix matrix" :clxops
+(fact "Clatrix clx/+/-/* on Clatrix submatrix" :clxops
 
-      (header "use Clatrix/+")
+      (header "Clatrix/+")
       (once-nx-ny  (clx/set DD i j 42.0))
-      (once  (clx/+ (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-      (bench (clx/+ (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+      (once  (clx/+ (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+      (bench (clx/+ (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
-      (header "use Clatrix/-")
-      (once  (clx/- (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-      (bench (clx/- (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+      (header "Clatrix/-")
+      (once  (clx/- (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+      (bench (clx/- (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
-      (header "use Clatrix/*")
-      (once  (clx/* (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-
-      (bench (clx/* (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-
-      true => truthy)
-
-
-(fact "core.matrix add/sub/mmul on Clatrix matrix" :mtxclxops
-
-      (header "use core.matrix/add")
-      (once  (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-      (bench (M/add (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-
-      (header "use core.matrix/sub")
-      (once (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
-      (bench (M/sub (E-3 DD nx-2 ny-2) (E-3 DD nx-2 ny-2)))
+      (header "Clatrix/*")
+      (once  (clx/* (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+      (bench (clx/* (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
       true => truthy)
 
 
-(fact "core.matrix add/sub/mmul on core.matrix/matrix" :mtxops
+(fact "core.matrix M/add/sub/mul on Clatrix submatrix" :mtxclxops
 
-      (header "use core.matrix/add")
-      (once  (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
-      (bench (M/add (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
+      (header "core.matrix/add")
+      (once  (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+      (bench (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
-      (header "use core.matrix/sub")
-      (once  (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
-      (bench (M/sub (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
+      (header "core.matrix/sub")
+      (once  (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+      (bench (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
-      (header "use core.matrix/mmul")
-;;       (once  (M/mmul (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
-;;       (bench (M/mmul (E-3 DCM nx-2 ny-2) (E-3 DCM nx-2 ny-2)))
-      (println "CompilerException java.lang.RuntimeException:")
-      (println "No such var: M/mmul, compiling:(matrixtests_test.clj:...:1)")
-      (println "ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L630")
+      (header "core.matrix/mul")
+      (once  (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+      (bench (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
       true => truthy)
+
+
+(fact "core.matrix M/add/sub/mul on core.matrix/submatrix" :mtxops
+
+      (header "core.matrix/add")
+      (once  (M/add (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+      (bench (M/add (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+
+      (header "core.matrix/sub")
+      (once  (M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+      (bench (M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+
+      (header "core.matrix/mul")
+      (once  (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2))
+      (bench (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+
+      true => truthy)
+
 
 (println)
 (underline "Total elapsed time for all tests")

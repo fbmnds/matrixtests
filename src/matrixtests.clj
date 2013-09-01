@@ -60,6 +60,8 @@
        (aset ~a-sym ~x (double ~v)))))
 
 
+;; submatrices using Clatrix
+
 (defmacro submatrix-1 [M [[a nx] [b ny]]]
   `(let [m# (clx/matrix (DoubleMatrix. ~nx ~ny
                                        (make-array Double/TYPE (* ~nx ~ny))))]
@@ -88,3 +90,9 @@
 
 (defmacro E-3 [z nx ny]
   `(submatrix-3 ~z [[1 ~nx] [1 ~ny]]))
+
+
+;; submatrix using core/matrix
+
+(defmacro E-4 [z nx ny]
+  `(M/submatrix ~z [[1 ~nx] [1 ~ny]]))
