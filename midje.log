@@ -1,220 +1,229 @@
 [36m= Namespace matrixtests-test[0m
+[36mChecking test[0m
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aget a j))))
+msecs :  2624.033619
 [36mChecking aget! variants[0m
+
 - optimal hints on aget, CGrande
-WARNING: Final GC required 2.851711196951698 % of runtime
-Evaluation count : 20640 in 60 samples of 344 calls.
-             Execution time mean : 6.227854 ms
-    Execution time std-deviation : 5.298123 ms
-   Execution time lower quantile : 1.152250 ms ( 2.5%)
-   Execution time upper quantile : 12.136839 ms (97.5%)
-                   Overhead used : 17.983180 ns
+--------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aget a j))))
+msecs :  2713.749085
+WARNING: Final GC required 8.395758451025467 % of runtime
+Evaluation count : 480 in 60 samples of 8 calls.
+             Execution time mean : 86.417551 ms
+    Execution time std-deviation : 63.492407 ms
+   Execution time lower quantile : 13.603740 ms ( 2.5%)
+   Execution time upper quantile : 149.504887 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
 - optimal hints/macros on aget, CGrande
-WARNING: Final GC required 1.136740332151025 % of runtime
-Evaluation count : 52260 in 60 samples of 871 calls.
-             Execution time mean : 5.844581 ms
-    Execution time std-deviation : 5.138099 ms
-   Execution time lower quantile : 1.150541 ms ( 2.5%)
-   Execution time upper quantile : 11.848206 ms (97.5%)
-                   Overhead used : 17.983180 ns
+---------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (deep-aget doubles dd i j)))
+msecs :  259.680966
+WARNING: Final GC required 7.117524791075377 % of runtime
+Evaluation count : 480 in 60 samples of 8 calls.
+             Execution time mean : 104.664008 ms
+    Execution time std-deviation : 61.391260 ms
+   Execution time lower quantile : 13.606471 ms ( 2.5%)
+   Execution time upper quantile : 149.572119 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
 - optimal hints/macros/cg-aget! on aget, CGrande
-WARNING: Final GC required 1.16905781315244 % of runtime
-Evaluation count : 5160 in 60 samples of 86 calls.
-             Execution time mean : 5.687996 ms
-    Execution time std-deviation : 5.252029 ms
-   Execution time lower quantile : 1.150849 ms ( 2.5%)
-   Execution time upper quantile : 12.476719 ms (97.5%)
-                   Overhead used : 17.983180 ns
+------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (cg-aget! dd i j)))
+msecs :  2637.15941
+Evaluation count : 4440 in 60 samples of 74 calls.
+             Execution time mean : 98.739133 ms
+    Execution time std-deviation : 58.020674 ms
+   Execution time lower quantile : 13.573649 ms ( 2.5%)
+   Execution time upper quantile : 142.104715 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
 - optimal hints/macros/f-cg-aget! on aget, CGrande
-WARNING: Final GC required 7.687198170521838 % of runtime
-Evaluation count : 5760 in 60 samples of 96 calls.
-             Execution time mean : 8.062276 ms
-    Execution time std-deviation : 5.161325 ms
-   Execution time lower quantile : 1.152334 ms ( 2.5%)
-   Execution time upper quantile : 12.467595 ms (97.5%)
-                   Overhead used : 17.983180 ns
+--------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (f-cg-aget! dd i j)))
+msecs :  363.433254
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 738.021712 ms
+    Execution time std-deviation : 351.948079 ms
+   Execution time lower quantile : 90.649463 ms ( 2.5%)
+   Execution time upper quantile : 962.530558 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 13 (21.6667 %)
+ Variance from outliers : 98.2226 % Variance is severely inflated by outliers
+
 - optimal hints/macros/cg-aget! on aget, LJensen
-WARNING: Final GC required 5.659148140238687 % of runtime
-Evaluation count : 7680 in 60 samples of 128 calls.
-             Execution time mean : 8.289355 ms
-    Execution time std-deviation : 5.081569 ms
-   Execution time lower quantile : 1.154766 ms ( 2.5%)
-   Execution time upper quantile : 12.164099 ms (97.5%)
-                   Overhead used : 17.983180 ns
+------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (lj-aget! dd i j)))
+msecs :  268.428548
+WARNING: Final GC required 3.049609324237971 % of runtime
+Evaluation count : 720 in 60 samples of 12 calls.
+             Execution time mean : 169.895509 ms
+    Execution time std-deviation : 153.376895 ms
+   Execution time lower quantile : 22.698652 ms ( 2.5%)
+   Execution time upper quantile : 352.749691 ms (97.5%)
+                   Overhead used : 17.902282 ns
 [36mChecking aset! variants[0m
+
 - improved hints on aset, CGrande
-Evaluation count : 9240 in 60 samples of 154 calls.
-             Execution time mean : 8.508485 ms
-    Execution time std-deviation : 4.948390 ms
-   Execution time lower quantile : 1.151515 ms ( 2.5%)
-   Execution time upper quantile : 12.428461 ms (97.5%)
-                   Overhead used : 17.983180 ns
+---------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aset a j 42.0))))
+msecs :  2748.948058
+WARNING: Final GC required 15.05028997449985 % of runtime
+Evaluation count : 420 in 60 samples of 7 calls.
+             Execution time mean : 58.324381 ms
+    Execution time std-deviation : 66.221372 ms
+   Execution time lower quantile : 14.267102 ms ( 2.5%)
+   Execution time upper quantile : 154.438823 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
 - optimal hints on aset, CGrande
-WARNING: Final GC required 5.51415035425493 % of runtime
-Evaluation count : 7260 in 60 samples of 121 calls.
-             Execution time mean : 7.796428 ms
-    Execution time std-deviation : 5.145175 ms
-   Execution time lower quantile : 1.149625 ms ( 2.5%)
-   Execution time upper quantile : 12.573963 ms (97.5%)
-                   Overhead used : 17.983180 ns
-- optimal hints/macros on aset, CGrande
-Evaluation count : 52200 in 60 samples of 870 calls.
-             Execution time mean : 6.781616 ms
-    Execution time std-deviation : 5.164334 ms
-   Execution time lower quantile : 1.151548 ms ( 2.5%)
-   Execution time upper quantile : 11.868938 ms (97.5%)
-                   Overhead used : 17.983180 ns
-- optimal hints/macros/cg-aset! on aset, CGrande
-WARNING: Final GC required 6.503649832414158 % of runtime
-Evaluation count : 5640 in 60 samples of 94 calls.
-             Execution time mean : 8.425401 ms
-    Execution time std-deviation : 5.080093 ms
-   Execution time lower quantile : 1.152208 ms ( 2.5%)
-   Execution time upper quantile : 12.736929 ms (97.5%)
-                   Overhead used : 17.983180 ns
-- optimal hints/macros/f-cg-aset! on aset, CGrande
-Evaluation count : 51840 in 60 samples of 864 calls.
-             Execution time mean : 8.565454 ms
-    Execution time std-deviation : 4.635094 ms
-   Execution time lower quantile : 1.150857 ms ( 2.5%)
-   Execution time upper quantile : 11.983994 ms (97.5%)
-                   Overhead used : 17.983180 ns
-- optimal hints/macros/jl-aset! on aset, LJensen
-WARNING: Final GC required 7.164081846895352 % of runtime
-Evaluation count : 5040 in 60 samples of 84 calls.
-             Execution time mean : 8.860220 ms
-    Execution time std-deviation : 4.902312 ms
-   Execution time lower quantile : 1.154318 ms ( 2.5%)
-   Execution time upper quantile : 12.835918 ms (97.5%)
-                   Overhead used : 17.983180 ns
-[36mChecking Clatrix[0m
-- Clatrix get
-WARNING: Final GC required 15.574404370767262 % of runtime
-Evaluation count : 5460 in 60 samples of 91 calls.
-             Execution time mean : 3.669245 ms
-    Execution time std-deviation : 4.554234 ms
-   Execution time lower quantile : 1.152860 ms ( 2.5%)
-   Execution time upper quantile : 11.909655 ms (97.5%)
-                   Overhead used : 17.983180 ns
+--------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (let [a (aget dd i)] (aset a j (double 42.0)))))
+msecs :  2505.826111
+WARNING: Final GC required 13.923404316471391 % of runtime
+Evaluation count : 480 in 60 samples of 8 calls.
+             Execution time mean : 46.783306 ms
+    Execution time std-deviation : 58.962258 ms
+   Execution time lower quantile : 14.284641 ms ( 2.5%)
+   Execution time upper quantile : 160.857388 ms (97.5%)
+                   Overhead used : 17.902282 ns
 
 Found 14 outliers in 60 samples (23.3333 %)
 	low-severe	 14 (23.3333 %)
- Variance from outliers : 98.3170 % Variance is severely inflated by outliers
+ Variance from outliers : 98.3175 % Variance is severely inflated by outliers
+
+- optimal hints/macros on aset, CGrande
+---------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (deep-aset doubles dd i j 42.0)))
+msecs :  2631.182581
+Evaluation count : 420 in 60 samples of 7 calls.
+             Execution time mean : 75.202354 ms
+    Execution time std-deviation : 70.685049 ms
+   Execution time lower quantile : 14.309235 ms ( 2.5%)
+   Execution time upper quantile : 170.159925 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
+- optimal hints/macros/cg-aset! on aset, CGrande
+------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (cg-aset! dd i j 42.0)))
+msecs :  253.153873
+Evaluation count : 420 in 60 samples of 7 calls.
+             Execution time mean : 93.834040 ms
+    Execution time std-deviation : 71.161459 ms
+   Execution time lower quantile : 14.305366 ms ( 2.5%)
+   Execution time upper quantile : 169.969526 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
+- optimal hints/macros/f-cg-aset! on aset, CGrande
+--------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (f-cg-aset! dd i j 42.0)))
+msecs :  356.190855
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 533.054010 ms
+    Execution time std-deviation : 457.368844 ms
+   Execution time lower quantile : 96.943967 ms ( 2.5%)
+   Execution time upper quantile : 1.022548 sec (97.5%)
+                   Overhead used : 17.902282 ns
+
+- optimal hints/macros/jl-aset! on aset, LJensen
+------------------------------------------------
+once-only reference:
+(dotimes [i 1000] (dotimes [j 1000] (lj-aset! dd i j 42.0)))
+msecs :  255.348352
+Evaluation count : 180 in 60 samples of 3 calls.
+             Execution time mean : 164.119892 ms
+    Execution time std-deviation : 158.266972 ms
+   Execution time lower quantile : 26.083156 ms ( 2.5%)
+   Execution time upper quantile : 359.578867 ms (97.5%)
+                   Overhead used : 17.902282 ns
+[36mChecking Clatrix[0m
+
+- Clatrix get
+-------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (clx/get DD i j)))
+msecs :  13.584287
+Evaluation count : 1860 in 60 samples of 31 calls.
+             Execution time mean : 22.847814 ms
+    Execution time std-deviation : 15.530376 ms
+   Execution time lower quantile : 3.384345 ms ( 2.5%)
+   Execution time upper quantile : 38.470820 ms (97.5%)
+                   Overhead used : 17.902282 ns
+
 - Clatrix set
-WARNING: Final GC required 9.019082819291077 % of runtime
-Evaluation count : 5340 in 60 samples of 89 calls.
-             Execution time mean : 6.539996 ms
-    Execution time std-deviation : 5.235794 ms
-   Execution time lower quantile : 1.151079 ms ( 2.5%)
-   Execution time upper quantile : 12.145632 ms (97.5%)
-                   Overhead used : 17.983180 ns
+-------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (clx/set DD i j 42.0)))
+msecs :  0.20193
+Evaluation count : 1670340 in 60 samples of 27839 calls.
+             Execution time mean : 25.255306 µs
+    Execution time std-deviation : 16.620469 µs
+   Execution time lower quantile : 3.680205 µs ( 2.5%)
+   Execution time upper quantile : 38.909076 µs (97.5%)
+                   Overhead used : 17.902282 ns
 [36mChecking core.matrix[0m
+
 - core.matrix mget
-WARNING: Final GC required 9.094544512724129 % of runtime
-Evaluation count : 5340 in 60 samples of 89 calls.
-             Execution time mean : 6.175264 ms
-    Execution time std-deviation : 5.460355 ms
-   Execution time lower quantile : 1.154636 ms ( 2.5%)
-   Execution time upper quantile : 12.781159 ms (97.5%)
-                   Overhead used : 17.983180 ns
+------------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (M/mget DCM i j)))
+msecs :  4.847165
+Evaluation count : 80100 in 60 samples of 1335 calls.
+             Execution time mean : 468.960139 µs
+    Execution time std-deviation : 338.619375 µs
+   Execution time lower quantile : 74.677456 µs ( 2.5%)
+   Execution time upper quantile : 805.618858 µs (97.5%)
+                   Overhead used : 17.902282 ns
+
 - core.matrix mset
-Evaluation count : 52080 in 60 samples of 868 calls.
-             Execution time mean : 7.310702 ms
-    Execution time std-deviation : 5.104174 ms
-   Execution time lower quantile : 1.150546 ms ( 2.5%)
-   Execution time upper quantile : 11.877034 ms (97.5%)
-                   Overhead used : 17.983180 ns
+------------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (M/mset DCM i j 42.0)))
+msecs :  84500.292639
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 57.011113 sec
+    Execution time std-deviation : 27.265521 sec
+   Execution time lower quantile : 7.986589 sec ( 2.5%)
+   Execution time upper quantile : 1.392459 min (97.5%)
+                   Overhead used : 17.902282 ns
+
 - core.matrix mset!
-Evaluation count : 27480 in 60 samples of 458 calls.
-             Execution time mean : 7.387916 ms
-    Execution time std-deviation : 5.219184 ms
-   Execution time lower quantile : 1.151432 ms ( 2.5%)
-   Execution time upper quantile : 12.097863 ms (97.5%)
-                   Overhead used : 17.983180 ns
-Exception in thread "main" java.lang.RuntimeException: Can't let qualified name: matrixtests-test/i, compiling:(matrixtests_test.clj:120:1)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6567)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$BodyExpr$Parser.parse(Compiler.java:5708)
-	at clojure.lang.Compiler$LetExpr$Parser.parse(Compiler.java:6009)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6560)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$BodyExpr$Parser.parse(Compiler.java:5708)
-	at clojure.lang.Compiler$FnMethod.parse(Compiler.java:5139)
-	at clojure.lang.Compiler$FnExpr.parse(Compiler.java:3751)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6558)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$BodyExpr$Parser.parse(Compiler.java:5708)
-	at clojure.lang.Compiler$FnMethod.parse(Compiler.java:5139)
-	at clojure.lang.Compiler$FnExpr.parse(Compiler.java:3751)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6558)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$BodyExpr$Parser.parse(Compiler.java:5708)
-	at clojure.lang.Compiler$FnMethod.parse(Compiler.java:5139)
-	at clojure.lang.Compiler$FnExpr.parse(Compiler.java:3751)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6558)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.access$100(Compiler.java:37)
-	at clojure.lang.Compiler$LetFnExpr$Parser.parse(Compiler.java:5836)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6560)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6548)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$InvokeExpr.parse(Compiler.java:3624)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6562)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.analyze(Compiler.java:6322)
-	at clojure.lang.Compiler$BodyExpr$Parser.parse(Compiler.java:5708)
-	at clojure.lang.Compiler$FnMethod.parse(Compiler.java:5139)
-	at clojure.lang.Compiler$FnExpr.parse(Compiler.java:3751)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6558)
-	at clojure.lang.Compiler.analyze(Compiler.java:6361)
-	at clojure.lang.Compiler.eval(Compiler.java:6616)
+-------------------
+once-only reference:
+(dotimes [i 10] (dotimes [j 10] (M/mset DCM i j 42.0)))
+msecs :  81309.820981
+Exception in thread "main" java.lang.IllegalArgumentException: No implementation of method: :set-2d! of protocol: #'clojure.core.matrix.protocols/PIndexedSettingMutable found for class: clojure.lang.LazySeq
+	at clojure.core$_cache_protocol_fn.invoke(core_deftype.clj:541)
+	at clojure.core.matrix.protocols$eval6733$fn__6734$G__6722__6745.invoke(protocols.clj:83)
+	at clojure.core.matrix$mset_BANG_.invoke(matrix.clj:376)
+	at matrixtests_test$eval14395$base_function__5062__auto____14396$fn__14397$fn__14406.invoke(matrixtests_test.clj:268)
+	at criterium.core$run_benchmark.invoke(core.clj:478)
+	at criterium.core$benchmark_STAR_.invoke(core.clj:779)
+	at matrixtests_test$eval14395$base_function__5062__auto____14396$fn__14397.invoke(matrixtests_test.clj:268)
+	at midje.util.thread_safe_var_nesting$with_altered_roots_STAR_.invoke(thread_safe_var_nesting.clj:32)
+	at matrixtests_test$eval14395$base_function__5062__auto____14396.invoke(matrixtests_test.clj:268)
+	at clojure.lang.AFn.applyToHelper(AFn.java:159)
+	at clojure.lang.AFn.applyTo(AFn.java:151)
+	at clojure.lang.AFunction$1.doInvoke(AFunction.java:29)
+	at clojure.lang.RestFn.invoke(RestFn.java:397)
+	at midje.checking.facts$check_one$fn__5022.invoke(facts.clj:31)
+	at midje.checking.facts$check_one.invoke(facts.clj:30)
+	at midje.checking.facts$creation_time_check.invoke(facts.clj:35)
+	at matrixtests_test$eval14395.invoke(matrixtests_test.clj:268)
+	at clojure.lang.Compiler.eval(Compiler.java:6619)
 	at clojure.lang.Compiler.load(Compiler.java:7064)
 	at clojure.lang.RT.loadResourceScript(RT.java:370)
 	at clojure.lang.RT.loadResourceScript(RT.java:361)
@@ -250,9 +259,4 @@ Exception in thread "main" java.lang.RuntimeException: Can't let qualified name:
 	at clojure.lang.AFn.applyToHelper(AFn.java:163)
 	at clojure.lang.Var.applyTo(Var.java:532)
 	at clojure.main.main(main.java:37)
-Caused by: java.lang.RuntimeException: Can't let qualified name: matrixtests-test/i
-	at clojure.lang.Util.runtimeException(Util.java:219)
-	at clojure.lang.Compiler$LetExpr$Parser.parse(Compiler.java:5972)
-	at clojure.lang.Compiler.analyzeSeq(Compiler.java:6560)
-	... 118 more
 Subprocess failed

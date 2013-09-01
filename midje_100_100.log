@@ -1,0 +1,75 @@
+[36m= Namespace matrixtests-test[0m
+inititalizing the tests:
+------------------------
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (cg-aset! dd i j 42.0)))
+"Elapsed time: 3.39473 msecs"
+functional tests
+----------------
+[36mChecking optimal hints on aget, CGrande[0m
+[36mChecking optimal hints/macros on aget, CGrande[0m
+... omitting further get/set tests
+
+[36mChecking clx/+ is ok for Clatrix matrix[0m
+
+clx/+ is not suitable for clojure array/matrix
+----------------------------------------------
+clojure.lang.PersistentVector cannot be cast to java.lang.Number
+
+clx/+ is not suitable for core.matrix matrix
+--------------------------------------------
+clojure.lang.PersistentVector cannot be cast to java.lang.Number
+
+core.matrix provides convenient handling of different matrix types
+------------------------------------------------------------------
+[36mChecking M/add is ok for core.matrix matrix[0m
+[36mChecking M/add is ok for clojure array/matrix[0m
+[36mChecking M/add is ok for Clatrix matrix[0m
+
+testing matrix subtraction
+--------------------------
+[36mChecking clx/- is ok for Clatrix matrix[0m
+[36mChecking M/sub is ok for core.matrix matrix[0m
+[36mChecking M/sub is ok for clojure array/matrix[0m
+[36mChecking M/sub is ok for Clatrix matrix[0m
+
+testing matrix multiplication (inner product)
+---------------------------------------------
+[36mChecking clx/* is ok for Clatrix matrix[0m
+
+M/mul is documented to be elementwise product, but provides inner product
+-------------------------------------------------------------------------
+ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L609
+[36mChecking M/mul is 'ok' for core.matrix matrix[0m
+[36mChecking M/mul is 'ok' for clojure array/matrix[0m
+[36mChecking M/mul is 'ok' for Clatrix matrix[0m
+
+core.matrix/mmul should be inner product, but throws compiler exception
+-----------------------------------------------------------------------
+ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L630
+CompilerException java.lang.RuntimeException:
+No such var: M/mmul, compiling:(matrixtests_test.clj:...:1)
+
+testing matrix multiplication (scalar product)
+----------------------------------------------
+[36mChecking clx/* is ok for Clatrix matrix[0m
+[36mChecking M/mul is ok for core.matrix matrix[0m
+[36mChecking M/mul is ok for clojure array/matrix[0m
+[36mChecking M/mul is ok for Clatrix matrix[0m
+
+testing submatrices in expressions
+----------------------------------
+[36mChecking (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT))[0m
+[36mChecking (clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT))[0m
+[36mChecking (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT))[0m
+[36mChecking (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))[0m
+
+functional tests done.
+
+[36mChecking aget! variants[0m
+
+- optimal hints on aget, CGrande
+--------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (let [a (aget dd i)] (aget a j))))
+"Elapsed time: 3.222426 msecs"
+WARNING: Final GC required 60.10491209598877 % of runtime

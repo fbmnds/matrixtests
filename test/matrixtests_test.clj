@@ -433,7 +433,7 @@ expands into (do
       (bench (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
       (header "core.matrix/mul")
-      (once  (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+      (once  (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
       (bench (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
 
       true => truthy)
@@ -450,7 +450,7 @@ expands into (do
       (bench (M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
 
       (header "core.matrix/mul")
-      (once  (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2))
+      (once  (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
       (bench (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
 
       true => truthy)
