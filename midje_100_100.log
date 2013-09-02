@@ -73,3 +73,411 @@ once-only reference:
 (clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (let [a (aget dd i)] (aget a j))))
 "Elapsed time: 3.222426 msecs"
 WARNING: Final GC required 60.10491209598877 % of runtime
+Evaluation count : 44520 in 60 samples of 742 calls.
+             Execution time mean : 1.394060 ms
+    Execution time std-deviation : 311.053219 µs
+   Execution time lower quantile : 135.607523 µs ( 2.5%)
+   Execution time upper quantile : 1.913558 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 4 outliers in 60 samples (6.6667 %)
+	low-severe	 2 (3.3333 %)
+	low-mild	 2 (3.3333 %)
+ Variance from outliers : 92.8777 % Variance is severely inflated by outliers
+
+- optimal hints/macros on aget, CGrande
+---------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (deep-aget doubles dd i j)))
+"Elapsed time: 2.946377 msecs"
+WARNING: Final GC required 3.1851778435346088 % of runtime
+Evaluation count : 81000 in 60 samples of 1350 calls.
+             Execution time mean : 1.395959 ms
+    Execution time std-deviation : 46.084230 µs
+   Execution time lower quantile : 1.308683 ms ( 2.5%)
+   Execution time upper quantile : 1.494137 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+- optimal hints/macros/cg-aget! on aget, CGrande
+------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (cg-aget! dd i j)))
+"Elapsed time: 3.021076 msecs"
+WARNING: Final GC required 8.93798886611104 % of runtime
+Evaluation count : 47580 in 60 samples of 793 calls.
+             Execution time mean : 901.750144 µs
+    Execution time std-deviation : 686.907735 µs
+   Execution time lower quantile : 135.466363 µs ( 2.5%)
+   Execution time upper quantile : 1.504235 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+- optimal hints/macros/f-cg-aget! on aget, CGrande
+--------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (f-cg-aget! dd i j)))
+"Elapsed time: 7.603367 msecs"
+WARNING: Final GC required 5.780379246879237 % of runtime
+Evaluation count : 7800 in 60 samples of 130 calls.
+             Execution time mean : 8.526395 ms
+    Execution time std-deviation : 1.576618 ms
+   Execution time lower quantile : 7.449472 ms ( 2.5%)
+   Execution time upper quantile : 13.104762 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 16 outliers in 60 samples (26.6667 %)
+	low-severe	 9 (15.0000 %)
+	low-mild	 2 (3.3333 %)
+	high-mild	 5 (8.3333 %)
+ Variance from outliers : 89.3831 % Variance is severely inflated by outliers
+
+- optimal hints/macros/lj-aget! on aget, LJensen
+------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (lj-aget! dd i j)))
+"Elapsed time: 3.121305 msecs"
+WARNING: Final GC required 9.819390864432389 % of runtime
+Evaluation count : 43080 in 60 samples of 718 calls.
+             Execution time mean : 879.731993 µs
+    Execution time std-deviation : 657.954937 µs
+   Execution time lower quantile : 137.660808 µs ( 2.5%)
+   Execution time upper quantile : 1.503563 ms (97.5%)
+                   Overhead used : 2.312743 µs
+[36mChecking aset! variants[0m
+
+- improved hints on aset, CGrande
+---------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (let [a (aget dd i)] (aset a j 42.0))))
+"Elapsed time: 3.083803 msecs"
+WARNING: Final GC required 5.797327155601553 % of runtime
+Evaluation count : 43260 in 60 samples of 721 calls.
+             Execution time mean : 1.472738 ms
+    Execution time std-deviation : 68.421097 µs
+   Execution time lower quantile : 1.325484 ms ( 2.5%)
+   Execution time upper quantile : 1.609989 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 14 outliers in 60 samples (23.3333 %)
+	low-severe	 9 (15.0000 %)
+	low-mild	 1 (1.6667 %)
+	high-mild	 4 (6.6667 %)
+ Variance from outliers : 31.9927 % Variance is moderately inflated by outliers
+
+- optimal hints on aset, CGrande
+--------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (let [a (aget dd i)] (aset a j (double 42.0)))))
+"Elapsed time: 3.167535 msecs"
+Evaluation count : 427260 in 60 samples of 7121 calls.
+             Execution time mean : 1.131903 ms
+    Execution time std-deviation : 547.694839 µs
+   Execution time lower quantile : 137.937501 µs ( 2.5%)
+   Execution time upper quantile : 1.488523 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 14 outliers in 60 samples (23.3333 %)
+	low-severe	 14 (23.3333 %)
+ Variance from outliers : 98.2258 % Variance is severely inflated by outliers
+
+- optimal hints/macros on aset, CGrande
+---------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (deep-aset doubles dd i j 42.0)))
+"Elapsed time: 2.999012 msecs"
+WARNING: Final GC required 5.382740546603423 % of runtime
+Evaluation count : 43680 in 60 samples of 728 calls.
+             Execution time mean : 1.472660 ms
+    Execution time std-deviation : 74.104019 µs
+   Execution time lower quantile : 1.326141 ms ( 2.5%)
+   Execution time upper quantile : 1.640370 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 15 outliers in 60 samples (25.0000 %)
+	low-severe	 7 (11.6667 %)
+	low-mild	 2 (3.3333 %)
+	high-mild	 6 (10.0000 %)
+ Variance from outliers : 36.8221 % Variance is moderately inflated by outliers
+
+- optimal hints/macros/cg-aset! on aset, CGrande
+------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (cg-aset! dd i j 42.0)))
+"Elapsed time: 3.056294 msecs"
+WARNING: Final GC required 15.328096626258311 % of runtime
+Evaluation count : 43080 in 60 samples of 718 calls.
+             Execution time mean : 486.000188 µs
+    Execution time std-deviation : 578.529470 µs
+   Execution time lower quantile : 137.765065 µs ( 2.5%)
+   Execution time upper quantile : 1.503793 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+- optimal hints/macros/f-cg-aset! on aset, CGrande
+--------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (f-cg-aset! dd i j 42.0)))
+"Elapsed time: 101.281647 msecs"
+WARNING: Final GC required 5.002183489576496 % of runtime
+Evaluation count : 7200 in 60 samples of 120 calls.
+             Execution time mean : 8.979852 ms
+    Execution time std-deviation : 433.408651 µs
+   Execution time lower quantile : 8.073197 ms ( 2.5%)
+   Execution time upper quantile : 9.958896 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 16 outliers in 60 samples (26.6667 %)
+	low-severe	 7 (11.6667 %)
+	low-mild	 3 (5.0000 %)
+	high-mild	 6 (10.0000 %)
+ Variance from outliers : 33.6305 % Variance is moderately inflated by outliers
+
+- optimal hints/macros/lj-aset! on aset, LJensen
+------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (lj-aset! dd i j 42.0)))
+"Elapsed time: 3.078074 msecs"
+Evaluation count : 41160 in 60 samples of 686 calls.
+             Execution time mean : 962.641622 µs
+    Execution time std-deviation : 630.988957 µs
+   Execution time lower quantile : 141.191797 µs ( 2.5%)
+   Execution time upper quantile : 1.562717 ms (97.5%)
+                   Overhead used : 2.312743 µs
+[36mChecking Clatrix[0m
+
+- Clatrix get
+-------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (clx/get DD i j)))
+"Elapsed time: 387.189513 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 3.638275 sec
+    Execution time std-deviation : 924.358152 ms
+   Execution time lower quantile : 359.033492 ms ( 2.5%)
+   Execution time upper quantile : 4.183325 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 7 outliers in 60 samples (11.6667 %)
+	low-severe	 5 (8.3333 %)
+	low-mild	 1 (1.6667 %)
+	high-mild	 1 (1.6667 %)
+ Variance from outliers : 94.6359 % Variance is severely inflated by outliers
+
+- Clatrix set
+-------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (clx/set DD i j 42.0)))
+"Elapsed time: 3.396802 msecs"
+WARNING: Final GC required 3.192386553955039 % of runtime
+Evaluation count : 26820 in 60 samples of 447 calls.
+             Execution time mean : 3.639417 ms
+    Execution time std-deviation : 120.784488 µs
+   Execution time lower quantile : 3.439626 ms ( 2.5%)
+   Execution time upper quantile : 3.763518 ms (97.5%)
+                   Overhead used : 2.312743 µs
+[36mChecking core.matrix[0m
+
+- core.matrix mget
+------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (M/mget DCM i j)))
+"Elapsed time: 361.268284 msecs"
+Evaluation count : 240 in 60 samples of 4 calls.
+             Execution time mean : 211.067864 ms
+    Execution time std-deviation : 125.076085 ms
+   Execution time lower quantile : 27.718851 ms ( 2.5%)
+   Execution time upper quantile : 328.764498 ms (97.5%)
+                   Overhead used : 2.312743 µs
+
+- core.matrix mset is prohibitively slow
+----------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (M/mset DCM i j 42.0)))
+"Elapsed time: 63426.68525 msecs"
+
+- core.matrix mset! is not implemented for Clatrix:
+---------------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (M/mset! DCM i j 42.0)))
+caught exception:  No implementation of method: :set-2d! of protocol: #'clojure.core.matrix.protocols/PIndexedSettingMutable found for class: clojure.lang.LazySeq
+[36mChecking get submatrix Clatrix / Clatrix[0m
+
+- use Clatrix matrix
+--------------------
+once-only reference:
+(clojure.core/dotimes [i 2] (E-1 DD nx-2 ny-2))
+"Elapsed time: 7980.85115 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.478728 sec
+    Execution time std-deviation : 2.733067 sec
+   Execution time lower quantile : 727.082056 ms ( 2.5%)
+   Execution time upper quantile : 8.034041 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 11 (18.3333 %)
+	low-mild	 1 (1.6667 %)
+	high-mild	 1 (1.6667 %)
+ Variance from outliers : 98.1918 % Variance is severely inflated by outliers
+
+- use "[[D", finally cast to Clatrix matrix
+-------------------------------------------
+once-only reference:
+(clojure.core/dotimes [i 2] (E-2 DD nx-2 ny-2))
+"Elapsed time: 7802.5241 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.250410 sec
+    Execution time std-deviation : 2.872014 sec
+   Execution time lower quantile : 699.400000 ms ( 2.5%)
+   Execution time upper quantile : 8.106413 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 15 outliers in 60 samples (25.0000 %)
+	low-severe	 14 (23.3333 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.2141 % Variance is severely inflated by outliers
+
+- use Clatrix/from-indices
+--------------------------
+once-only reference:
+(clojure.core/dotimes [i 2] (E-3 DD nx-2 ny-2))
+"Elapsed time: 18675.423095 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 14.609670 sec
+    Execution time std-deviation : 6.319288 sec
+   Execution time lower quantile : 1.617908 sec ( 2.5%)
+   Execution time upper quantile : 18.625221 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 12 outliers in 60 samples (20.0000 %)
+	low-severe	 11 (18.3333 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.1987 % Variance is severely inflated by outliers
+[36mChecking Clatrix clx/+/-/* on Clatrix submatrix[0m
+
+- Clatrix/+
+-----------
+once-only reference:
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (clx/set DD i j 42.0)))
+"Elapsed time: 110.611724 msecs"
+(clx/+ (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 7791.370223 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 5.956880 sec
+    Execution time std-deviation : 3.103608 sec
+   Execution time lower quantile : 728.479047 ms ( 2.5%)
+   Execution time upper quantile : 8.146102 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+- Clatrix/-
+-----------
+once-only reference:
+(clx/- (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 7656.350624 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.311891 sec
+    Execution time std-deviation : 2.733808 sec
+   Execution time lower quantile : 703.444170 ms ( 2.5%)
+   Execution time upper quantile : 7.908677 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 12 (20.0000 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.1991 % Variance is severely inflated by outliers
+
+- Clatrix/*
+-----------
+once-only reference:
+(clx/* (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 8149.039007 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.561914 sec
+    Execution time std-deviation : 2.699031 sec
+   Execution time lower quantile : 757.658082 ms ( 2.5%)
+   Execution time upper quantile : 8.193875 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 13 outliers in 60 samples (21.6667 %)
+	low-severe	 12 (20.0000 %)
+	low-mild	 1 (1.6667 %)
+ Variance from outliers : 98.1845 % Variance is severely inflated by outliers
+[36mChecking core.matrix M/add/sub/mul on Clatrix submatrix[0m
+
+- core.matrix/add
+-----------------
+once-only reference:
+(M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 8092.181389 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.430445 sec
+    Execution time std-deviation : 2.768553 sec
+   Execution time lower quantile : 722.054289 ms ( 2.5%)
+   Execution time upper quantile : 8.221898 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 12 outliers in 60 samples (20.0000 %)
+	low-severe	 12 (20.0000 %)
+ Variance from outliers : 98.1975 % Variance is severely inflated by outliers
+
+- core.matrix/sub
+-----------------
+once-only reference:
+(M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 7766.633048 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 6.530203 sec
+    Execution time std-deviation : 2.733805 sec
+   Execution time lower quantile : 736.188728 ms ( 2.5%)
+   Execution time upper quantile : 8.138455 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 12 outliers in 60 samples (20.0000 %)
+	low-severe	 12 (20.0000 %)
+ Variance from outliers : 98.1897 % Variance is severely inflated by outliers
+
+- core.matrix/mul
+-----------------
+once-only reference:
+(M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2))
+"Elapsed time: 7754.551798 msecs"
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 7.144945 sec
+    Execution time std-deviation : 3.094561 sec
+   Execution time lower quantile : 750.749529 ms ( 2.5%)
+   Execution time upper quantile : 9.346485 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+Found 11 outliers in 60 samples (18.3333 %)
+	low-severe	 11 (18.3333 %)
+ Variance from outliers : 98.1991 % Variance is severely inflated by outliers
+[36mChecking core.matrix M/add/sub/mul on core.matrix/submatrix[0m
+
+- core.matrix/add
+-----------------
+once-only reference:
+(M/add (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2))
+"Elapsed time: 1560.144415 msecs"
+Evaluation count : 600 in 60 samples of 10 calls.
+             Execution time mean : 746.770407 ms
+    Execution time std-deviation : 493.221172 ms
+   Execution time lower quantile : 98.081612 ms ( 2.5%)
+   Execution time upper quantile : 1.245235 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+- core.matrix/sub
+-----------------
+once-only reference:
+(M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2))
+"Elapsed time: 1080.14883 msecs"
+WARNING: Final GC required 6.926528210165143 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 1.010468 sec
+    Execution time std-deviation : 59.785555 ms
+   Execution time lower quantile : 952.517580 ms ( 2.5%)
+   Execution time upper quantile : 1.081588 sec (97.5%)
+                   Overhead used : 2.312743 µs
+
+- core.matrix/mul
+-----------------
+once-only reference:
+(M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2))
+"Elapsed time: 3812027.82381 msecs"
