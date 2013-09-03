@@ -4,11 +4,23 @@
             [criterium.core :as crit]
             [clatrix.core :as clx]
             [clojure.core.matrix :as M]
+            [clojure.core.matrix.impl default double-array ndarray persistent-vector wrappers sparse-map sequence]
+            [clojure.core.matrix.protocols :as mp]
+            [clojure.core.matrix.multimethods :as mm]
+            [mikera.vectorz.matrix-api]
+            [mikera.vectorz.core]
+            [mikera.vectorz.matrix]
             [clojure.string :as str]
             [clojure.inspector :as insp]
             [clojure.tools.macro :as mac])
   (:use midje.sweet)
   (:import [org.jblas DoubleMatrix]))
+
+(M/set-current-implementation :vectorz)
+
+(println "\ncurrent core.matrix implementation")
+(println   "----------------------------------")
+(println (M/current-implementation) "\n")
 
 
 (set! *warn-on-reflection* true)
@@ -143,7 +155,7 @@ expands into (do
 (def dd (make-array Double/TYPE nx ny))
 (once-nx-ny (cg-aset! dd i j 42.0))
 (def DD (clx/matrix (DoubleMatrix. ^"[[D" dd)))
-(def DCM (M/matrix dd))
+(def DCM (M/matrix DD))
 
 (def CNULL  (clx/matrix [[0.0 0.0] [0.0 0.0]]))
 (def CMNULL (M/new-matrix 2 2))
@@ -159,6 +171,7 @@ expands into (do
 (def CMT   (M/matrix T))
 (def CMT*2 (M/matrix T*2))
 (def CMT*T (M/matrix T*T))
+
 
 (fact-group
  :ftests
