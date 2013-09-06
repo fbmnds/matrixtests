@@ -208,15 +208,15 @@ expands into (do
    (catch Exception e (println (.getMessage e))))
  (println)
 
- (underline "core.matrix provides convenient handling of different matrix types")
+ ;; (underline "core.matrix provides convenient handling of different matrix types")
  (fact "M/add is ok for core.matrix matrix"
        (M/add CMT CMT) => CMT*2)
 
- (fact "M/add is ok for clojure array/matrix"
-       (M/add T T) => CMT*2)
-
- (fact "M/add is ok for Clatrix matrix"
-       (M/add CT CT) => CMT*2)
+ ;;  (fact "M/add is ok for clojure array/matrix"
+ ;;        (M/add T T) => CMT*2)
+ ;;
+ ;;  (fact "M/add is ok for Clatrix matrix"
+ ;;        (M/add CT CT) => CMT*2)
 
  (println)
  (underline "testing matrix subtraction")
@@ -226,11 +226,11 @@ expands into (do
  (fact "M/sub is ok for core.matrix matrix"
        (M/sub CMT CMT) => CMNULL)
 
- (fact "M/sub is ok for clojure array/matrix"
-       (M/sub T T) => CMNULL)
-
- (fact "M/sub is ok for Clatrix matrix"
-       (M/sub CT CT) => CMNULL)
+ ;;  (fact "M/sub is ok for clojure array/matrix"
+ ;;        (M/sub T T) => CMNULL)
+ ;;
+ ;;  (fact "M/sub is ok for Clatrix matrix"
+ ;;        (M/sub CT CT) => CMNULL)
 
  (println)
  (underline "testing matrix multiplication (inner product)")
@@ -238,50 +238,50 @@ expands into (do
        (clx/* CT CT) => CT*T)
 
  (println)
- (underline "M/mul is documented to be elementwise product, but provides inner product")
- (println "ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L609")
- (fact "M/mul is 'ok' for core.matrix matrix"
-       (M/mul CMT CMT) => CMT*T)
+ ;; (underline "M/mul is documented to be elementwise product, but provides inner product")
+ ;; (println "ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L609")
+ (fact "M/mmul is 'ok' for core.matrix matrix"
+       (M/mmul CMT CMT) => CMT*T)
 
- (fact "M/mul is 'ok' for clojure array/matrix"
-       (M/mul T T) => CMT*T)
+ ;;  (fact "M/mul is 'ok' for clojure array/matrix"
+ ;;        (M/mul T T) => CMT*T)
+ ;;
+ ;;  (fact "M/mul is 'ok' for Clatrix matrix"
+ ;;        (M/mul CT CT) => CMT*T)
 
- (fact "M/mul is 'ok' for Clatrix matrix"
-       (M/mul CT CT) => CMT*T)
-
- (println)
- (underline "core.matrix/mmul should be inner product, but throws compiler exception")
- (println "ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L630")
- (println "CompilerException java.lang.RuntimeException:")
- (println "No such var: M/mmul, compiling:(matrixtests_test.clj:...:1)")
+ ;;  (println)
+ ;;  (underline "core.matrix/mmul should be inner product, but throws compiler exception")
+ ;;  (println "ref. https://github.com/mikera/matrix-api/blob/master/src/main/clojure/clojure/core/matrix.clj#L630")
+ ;;  (println "CompilerException java.lang.RuntimeException:")
+ ;;  (println "No such var: M/mmul, compiling:(matrixtests_test.clj:...:1)")
 
  (println)
  (underline "testing matrix multiplication (scalar product)")
  (fact "clx/* is ok for Clatrix matrix"
        (clx/* 2. CT) => CT*2)
 
- (fact "M/mul is ok for core.matrix matrix"
-       (M/mul 2. CMT) => CMT*2)
+ (fact "M/mmul is ok for core.matrix matrix"
+       (M/mmul 2. CMT) => CMT*2)
 
- (fact "M/mul is ok for clojure array/matrix"
-       (M/mul 2. T) => CMT*2)
-
- (fact "M/mul is ok for Clatrix matrix"
-       (M/mul 2. CT) => CMT*2)
+ ;;  (fact "M/mul is ok for clojure array/matrix"
+ ;;        (M/mul 2. T) => CMT*2)
+ ;;
+ ;;  (fact "M/mul is ok for Clatrix matrix"
+ ;;        (M/mul 2. CT) => CMT*2)
 
  (println)
  (underline "testing submatrices in expressions")
-;; does not cooperate with 'fact'
-;; seems to be a 'fact' problem
-;;
-;;  (macro-do
-;;   [expr res]
-;;   `(fact (str '~expr) ~expr => ~res)
-;;
-;;   (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT)) CT*T
-;;   (clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT)) CT*T
-;;   (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT)) CT*T
-;;   (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT)) CMT*T)
+ ;; does not cooperate with 'fact'
+ ;; seems to be a 'fact' problem
+ ;;
+ ;;  (macro-do
+ ;;   [expr res]
+ ;;   `(fact (str '~expr) ~expr => ~res)
+ ;;
+ ;;   (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT)) CT*T
+ ;;   (clx/* 1.0 (E-2 DD 2 2) (clx/- CT*2 CT)) CT*T
+ ;;   (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT)) CT*T
+ ;;   (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT)) CMT*T)
 
  (fact "(clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT))"
        (clx/* 1.0 (E-1 DD 2 2) (clx/- CT*2 CT))
@@ -296,8 +296,8 @@ expands into (do
        (clx/* 1.0 (E-3 DD 2 2) (clx/- CT*2 CT))
        => CT*T)
 
- (fact "(M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))"
-       (M/mul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))
+ (fact "(M/mmul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))"
+       (M/mmul 1.0 (E-4 DCM 2 2) (M/sub CMT*2 CMT))
        => CMT*T)
 
  (println "\nfunctional tests done.\n"))
@@ -388,16 +388,17 @@ expands into (do
       (once-nx-ny  (M/mget DCM i j))
       (bench-nx-ny (M/mget DCM i j))
 
-      (header "core.matrix mset is prohibitively slow")
+      (header "core.matrix mset")
       (once-nx-ny  (M/mset DCM i j 42.0))
-      ;; (bench-nx-ny (M/mset DCM i j 42.0))
+      (bench-nx-ny (M/mset DCM i j 42.0))
 
-      (header "core.matrix mset! is not implemented for Clatrix:")
+      (header "core.matrix mset!")
       (try
         (once-nx-ny  (M/mset! DCM i j 42.0))
+        (bench-nx-ny (M/mset! DCM i j 42.0))
         (catch Exception e (println "caught exception: " (.getMessage e))))
 
-        true => truthy)
+      true => truthy)
 
 
 (fact "get submatrix Clatrix / Clatrix" :submatrix
@@ -435,21 +436,21 @@ expands into (do
       true => truthy)
 
 
-(fact "core.matrix M/add/sub/mul on Clatrix submatrix" :mtxclxops
-
-      (header "core.matrix/add")
-      (once  (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-      (bench (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-
-      (header "core.matrix/sub")
-      (once  (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-      (bench (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-
-      (header "core.matrix/mul")
-      (once  (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-      (bench (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
-
-      true => truthy)
+;; (fact "core.matrix M/add/sub/mul on Clatrix submatrix" :mtxclxops
+;;
+;;       (header "core.matrix/add")
+;;       (once  (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;       (bench (M/add (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;
+;;       (header "core.matrix/sub")
+;;       (once  (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;       (bench (M/sub (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;
+;;       (header "core.matrix/mul")
+;;       (once  (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;       (bench (M/mul (E-2 DD nx-2 ny-2) (E-2 DD nx-2 ny-2)))
+;;
+;;       true => truthy)
 
 
 (fact "core.matrix M/add/sub/mul on core.matrix/submatrix" :mtxops
@@ -462,9 +463,9 @@ expands into (do
       (once  (M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
       (bench (M/sub (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
 
-      (header "core.matrix/mul")
-      (once  (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
-      (bench (M/mul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+      (header "core.matrix/mmul")
+      (once  (M/mmul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
+      (bench (M/mmul (E-4 DCM nx-2 ny-2) (E-4 DCM nx-2 ny-2)))
 
       true => truthy)
 

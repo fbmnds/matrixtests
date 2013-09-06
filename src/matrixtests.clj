@@ -1,10 +1,18 @@
 (ns matrixtests
   (:require [clatrix.core :as clx]
             [clojure.core.matrix :as M]
+            ;;            [clojure.core.matrix.operators]
+            [clojure.core.matrix.impl default double-array ndarray persistent-vector wrappers sparse-map]
+            [clojure.core.matrix.protocols :as mp]
+            [clojure.core.matrix.multimethods :as mm]
+            [mikera.vectorz.matrix-api]
+            [mikera.vectorz.core]
+            [mikera.vectorz.matrix]
             [criterium.core :as crit])
   (:use (incanter core))
   (:import [org.jblas DoubleMatrix]))
 
+;(set-current-implementation :vectorz)
 
 ;; http://clj-me.cgrand.net/2009/10/15/multidim-arrays/
 ;;
