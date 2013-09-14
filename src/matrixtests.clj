@@ -10,17 +10,15 @@
             [mikera.vectorz.matrix]
             [criterium.core :as crit])
   (:use (incanter core))
-  (:import [org.jblas DoubleMatrix]))
+  (:import [org.jblas DoubleMatrix]
+           [clatrix.core Matrix]))
 
-;(set-current-implementation :vectorz)
+(M/set-current-implementation :clatrix)
+
+(set! *warn-on-reflection* true)
+(set! *unchecked-math* true)
 
 ;; http://clj-me.cgrand.net/2009/10/15/multidim-arrays/
-;;
-;; (defn array? [x] (-> x class .isArray))
-;; (defn see [x] (if (array? x) (map see x) x))
-;;
-;; (see (into-array (map (partial into-array Double/TYPE) [[1 2 3 4] [5 6]])))
-;; ;; ((1.0 2.0 3.0 4.0) (5.0 6.0))
 ;;
 (defmacro deep-aget
   ([hint array idx]
@@ -42,65 +40,58 @@
        (aset ~a-sym ~idx ~v))))
 
 
-(defmacro cg-aget! [M i j]
-  `(deep-aget ~'doubles ~M ~i ~j))
+(defn get-by-index
+  "Given matrix `m`, get a single value by row index `r` and column index `c`."
+  ([^Matrix m ^long r ^long c]
+     (clx/dotom .get m r c)))
 
-(defmacro cg-aset! [M i j v]
-  `(deep-aset ~'doubles ~M ~i ~j ~v))
 
-(defn f-cg-aget! [M i j]
-  (deep-aget doubles M i j))
+(defmacro m-get-by-index
+  "Given matrix `m`, get a single value by row index `r` and column index `c`."
+  [m r c]
+  `(clx/dotom .get ~m ~r ~c))
 
-(defn f-cg-aset! [M i j v]
-  (deep-aset doubles M i j v))
 
-;; http://www.bestinclass.dk/index.clj/2010/03/functional-fluid-dynamics-in-clojure.html
+(defn get-by-index--
+  "Given matrix `m`, get a single value by row index `r` and column index `c`."
+  [m r c]
+  (if (fn? m)
+    (let [[mm x dx y dy] (m)]
+      (clx/dotom .get mm (+ x r) (+ y c)))
+    (clx/dotom .get m r c)))
+
+(defn get-by-index-
+  "Given matrix `m`, get a single value by row index `r` and column index `c`."
+  [m r c]
+  (if (fn? m)
+    (clx/dotom .get (first (m)) (+ (second (m)) r) (+ (nth (m) 3) c))
+    (clx/dotom .get m r c)))
+
+
+(defprotocol PGetByIndex
+  (p-get-by-index [m i j]))
+
+(extend-protocol PGetByIndex
+  clojure.lang.IFn
+  (p-get-by-index [m r c]
+    (m-get-by-index (first (m)) (+ (second (m)) r) (+ (nth (m) 3) c)))
+  Matrix
+  (p-get-by-index [m r c]
+    (m-get-by-index m r c)))
+
+
+;; copied submatrix
 ;;
-(defmacro lj-aget!
-  ([array y]      `(aget ~(vary-meta array assoc :tag 'doubles) ~y))
-  ([array x & ys] `(let [a# (aget ~(vary-meta array assoc :tag 'objects) ~@ys)]
-                     (lj-aget! a# ~x))))
+(defmacro submatrix
+  [m [[x lx] [y ly]]]
+  `(let [subm# (clx/matrix (DoubleMatrix. ~lx ~ly))]
+    (dotimes [i# ~lx]
+      (dotimes [j# ~ly]
+        (clx/dotom .put subm# i# j# (clx/dotom .get ~m (+ i# ~x) (+ j# ~y)))))
+    subm#))
+
+
+;; in-place submatrix
 ;;
-(defmacro lj-aset! [array x y v]
-  (let [nested-array `(aget ~(vary-meta array assoc :tag 'objects) ~y)
-        a-sym         (with-meta (gensym "a") {:tag 'doubles})]
-    `(let [~a-sym ~nested-array]
-       (aset ~a-sym ~x (double ~v)))))
-
-
-;; submatrices using Clatrix
-
-(defmacro submatrix-1 [M [[a nx] [b ny]]]
-  `(let [m# (clx/matrix (DoubleMatrix. ~nx ~ny
-                                       (make-array Double/TYPE (* ~nx ~ny))))]
-     (dotimes [i# ~nx]
-       (dotimes [j# ~ny]
-         (clx/set m# i# j# (clx/get ~M (+ ~a i#) (+ ~b j#)))))
-     m#))
-
-(defmacro E-1 [z nx ny]
-  `(submatrix-1 ~z [[1 ~nx] [1 ~ny]]))
-
-
-(defmacro submatrix-2 [M [[a nx] [b ny]]]
-  `(let [m# (make-array Double/TYPE ~nx ~ny)]
-     (dotimes [i# ~nx]
-       (dotimes [j# ~ny]
-         (cg-aset! m# i# j# (clx/get ~M (+ ~a i#) (+ ~b j#)))))
-     (clx/matrix (DoubleMatrix. ^"[[D" m#))))
-
-(defmacro E-2 [z nx ny]
-  `(submatrix-2 ~z [[1 ~nx] [1 ~ny]]))
-
-
-(defmacro submatrix-3 [M [[a nx] [b ny]]]
-  `(clx/from-indices ~nx ~ny (fn [x# y#] (clx/get ~M (+ ~a x#) (+ ~b y#)))))
-
-(defmacro E-3 [z nx ny]
-  `(submatrix-3 ~z [[1 ~nx] [1 ~ny]]))
-
-
-;; submatrix using core/matrix
-
-(defmacro E-4 [z nx ny]
-  `(M/submatrix ~z [[1 ~nx] [1 ~ny]]))
+(defn submatrix! [m [[x dx] [y dy]]]
+  (fn [] [m x dx y dy]))
