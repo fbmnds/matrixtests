@@ -1,0 +1,178 @@
+[36m= Namespace matrixtests-test[0m
+Reflection warning, matrixtests.clj:60:7 - call to get can't be resolved.
+Reflection warning, matrixtests.clj:61:5 - call to get can't be resolved.
+Reflection warning, matrixtests.clj:67:5 - call to get can't be resolved.
+Reflection warning, matrixtests.clj:68:5 - call to get can't be resolved.
+Reflection warning, matrixtests.clj:80:5 - call to get can't be resolved.
+Reflection warning, matrixtests.clj:77:5 - call to get can't be resolved.
+current core.matrix implementation
+----------------------------------
+:clatrix 
+
+inititalizing the tests:
+------------------------
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (deep-aset doubles dd i j 42.0)))
+"Elapsed time: 1.429242 msecs"
+initialisation done
+
+[36mChecking [0m
+functional tests
+----------------
+[36mChecking submatrix[0m
+[36mChecking m-get-by-index[0m
+[36mChecking p-get-by-index[0m
+[36mChecking submatrix! / p-get-by-index[0m
+[36mChecking submatrix by Clatrix/get[0m
+[36mChecking [0m
+get matrix element by indices
+-----------------------------
+[36mChecking performance benchmark deep-aget, CGrande[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (deep-aget doubles dd i j)))
+"Elapsed time: 109.509077 msecs"
+WARNING: Final GC required 62.86432590981076 % of runtime
+WARNING: Final GC required 9.49984129062294 % of runtime
+Evaluation count : 338340 in 60 samples of 5639 calls.
+             Execution time mean : 120.203381 µs
+    Execution time std-deviation : 82.669006 µs
+   Execution time lower quantile : 15.927816 µs ( 2.5%)
+   Execution time upper quantile : 189.472523 µs (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance Clatrix dotom .get[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (clx/dotom .get DD i j)))
+"Elapsed time: 110.422054 msecs"
+WARNING: Final GC required 12.37491344590667 % of runtime
+Evaluation count : 78540 in 60 samples of 1309 calls.
+             Execution time mean : 395.848568 µs
+    Execution time std-deviation : 389.535686 µs
+   Execution time lower quantile : 79.565146 µs ( 2.5%)
+   Execution time upper quantile : 917.784691 µs (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance m-get-by-index[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (m-get-by-index DD i j)))
+"Elapsed time: 1.253959 msecs"
+WARNING: Final GC required 9.488940865321801 % of runtime
+Evaluation count : 74700 in 60 samples of 1245 calls.
+             Execution time mean : 583.180312 µs
+    Execution time std-deviation : 352.715343 µs
+   Execution time lower quantile : 76.862849 µs ( 2.5%)
+   Execution time upper quantile : 867.824088 µs (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance get-by-index[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (get-by-index DD i j)))
+"Elapsed time: 1.727554 msecs"
+WARNING: Final GC required 8.369964192029201 % of runtime
+Evaluation count : 64020 in 60 samples of 1067 calls.
+             Execution time mean : 733.731442 µs
+    Execution time std-deviation : 421.374236 µs
+   Execution time lower quantile : 95.090285 µs ( 2.5%)
+   Execution time upper quantile : 1.110296 ms (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance Clatrix get[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (clx/get DD i j)))
+"Elapsed time: 1075.341545 msecs"
+WARNING: Final GC required 9.227131990597732 % of runtime
+Evaluation count : 60 in 60 samples of 1 calls.
+             Execution time mean : 693.331578 ms
+    Execution time std-deviation : 414.390164 ms
+   Execution time lower quantile : 92.056824 ms ( 2.5%)
+   Execution time upper quantile : 1.074612 sec (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance core.matrix :clatrix mget[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (M/mget DCM i j)))
+"Elapsed time: 964.386572 msecs"
+WARNING: Final GC required 4.534277982449 % of runtime
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 725.442673 ms
+    Execution time std-deviation : 382.971001 ms
+   Execution time lower quantile : 94.463780 ms ( 2.5%)
+   Execution time upper quantile : 1.019676 sec (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance p-get-by-index[0m
+(clojure.core/dotimes [i matrixtests-test/nx] (clojure.core/dotimes [j matrixtests-test/ny] (p-get-by-index DD i j)))
+"Elapsed time: 1091.302561 msecs"
+WARNING: Final GC required 4.527472947297337 % of runtime
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 724.671228 ms
+    Execution time std-deviation : 387.117925 ms
+   Execution time lower quantile : 91.708323 ms ( 2.5%)
+   Execution time upper quantile : 1.019543 sec (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking fact at (matrixtests_test.clj:232)[0m
+[36mChecking [0m
+create a matrix
+---------------
+[36mChecking performance benchmark JBLAS DoubleMatrix[i,j][0m
+(DoubleMatrix. 50 50)
+"Elapsed time: 0.074319 msecs"
+WARNING: Final GC required 7.984623796064764 % of runtime
+Evaluation count : 932760 in 60 samples of 15546 calls.
+             Execution time mean : 45.123185 µs
+    Execution time std-deviation : 30.050466 µs
+   Execution time lower quantile : 3.831069 µs ( 2.5%)
+   Execution time upper quantile : 74.531317 µs (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking Clatrix create matrix[0m
+(clx/matrix (DoubleMatrix. 50 50))
+"Elapsed time: 0.103282 msecs"
+Evaluation count : 8312280 in 60 samples of 138538 calls.
+             Execution time mean : 60.261047 µs
+    Execution time std-deviation : 29.610727 µs
+   Execution time lower quantile : 4.659919 µs ( 2.5%)
+   Execution time upper quantile : 82.008936 µs (97.5%)
+                   Overhead used : 2.415053 µs
+
+Found 12 outliers in 60 samples (20.0000 %)
+	low-severe	 12 (20.0000 %)
+ Variance from outliers : 98.2290 % Variance is severely inflated by outliers
+[36mChecking Core.matrix / Clatrix create matrix[0m
+(M/matrix DCM500)
+"Elapsed time: 953.181525 msecs"
+WARNING: Final GC required 7.423115102695331 % of runtime
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 418.555850 ms
+    Execution time std-deviation : 256.977469 ms
+   Execution time lower quantile : 58.101137 ms ( 2.5%)
+   Execution time upper quantile : 658.852343 ms (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking [0m
+create and access a submatrix
+-----------------------------
+[36mChecking performance benchmark Clatrix matrix / get
+(current standard solution)[0m
+(subm-test)
+"Elapsed time: 837.455634 msecs"
+WARNING: Final GC required 4.747444978046315 % of runtime
+Evaluation count : 120 in 60 samples of 2 calls.
+             Execution time mean : 611.747770 ms
+    Execution time std-deviation : 318.259420 ms
+   Execution time lower quantile : 78.570680 ms ( 2.5%)
+   Execution time upper quantile : 893.801188 ms (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance of submatrix / get-by-index[0m
+(submatrix-get-test)
+"Elapsed time: 2.324722 msecs"
+WARNING: Final GC required 1.072727757155015 % of runtime
+Evaluation count : 32160 in 60 samples of 536 calls.
+             Execution time mean : 968.363424 µs
+    Execution time std-deviation : 906.765200 µs
+   Execution time lower quantile : 198.449927 µs ( 2.5%)
+   Execution time upper quantile : 2.125270 ms (97.5%)
+                   Overhead used : 2.415053 µs
+[36mChecking performance of submatrix / m-get-by-index[0m
+(submatrix-m-get-test)
+"Elapsed time: 2.775973 msecs"
+Evaluation count : 33900 in 60 samples of 565 calls.
+             Execution time mean : 1.750242 ms
+    Execution time std-deviation : 586.660335 µs
+   Execution time lower quantile : 180.864998 µs ( 2.5%)
+   Execution time upper quantile : 2.115413 ms (97.5%)
+                   Overhead used : 2.415053 µs
+
+Found 7 outliers in 60 samples (11.6667 %)
+	low-severe	 7 (11.6667 %)
+ Variance from outliers : 96.4501 % Variance is severely inflated by outliers
+
+Total elapsed time for all tests
+--------------------------------
+ :  4048013.481184  ms.
+[32mAll checks (23) succeeded.[0m

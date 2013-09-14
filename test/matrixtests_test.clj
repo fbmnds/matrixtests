@@ -112,9 +112,12 @@
 (def nx-2 (dec nx-1))
 (def ny-2 (dec ny-1))
 (def dd (make-array Double/TYPE nx ny))
-(once-nx-ny (cg-aset! dd i j 42.0))
+(once-nx-ny (deep-aset doubles dd i j 42.0))
 (def DD (clx/matrix (DoubleMatrix. ^"[[D" dd)))
 (def DCM (M/matrix DD))
+
+(def DM500 (DoubleMatrix. 500 500))
+(def DCM500 (vec (repeat 500 (vec (repeat 500 0.0)))))
 
 (def CNULL  (clx/matrix [[0.0 0.0] [0.0 0.0]]))
 (def CMNULL (M/new-matrix 2 2))
@@ -196,14 +199,14 @@
        (bench-nx-ny (deep-aget doubles dd i j))
        true => truthy)
 
- (fact "performance core.matrix :clatrix mget"
-       (once-nx-ny  (M/mget DCM i j))
-       (bench-nx-ny (M/mget DCM i j))
+ (fact "performance Clatrix dotom .get"
+       (once-nx-ny  (clx/dotom .get DD i j))
+       (bench-nx-ny (clx/dotom .get DD i j))
        true => truthy)
 
- (fact "performance Clatrix get"
-       (once-nx-ny  (clx/get DD i j))
-       (bench-nx-ny (clx/get DD i j))
+ (fact "performance m-get-by-index"
+       (once-nx-ny  (m-get-by-index DD i j))
+       (bench-nx-ny (m-get-by-index DD i j))
        true => truthy)
 
  (fact "performance get-by-index"
@@ -211,14 +214,19 @@
        (bench-nx-ny (get-by-index DD i j))
        true => truthy)
 
+ (fact "performance Clatrix get"
+       (once-nx-ny  (clx/get DD i j))
+       (bench-nx-ny (clx/get DD i j))
+       true => truthy)
+
+ (fact "performance core.matrix :clatrix mget"
+       (once-nx-ny  (M/mget DCM i j))
+       (bench-nx-ny (M/mget DCM i j))
+       true => truthy)
+
  (fact "performance p-get-by-index"
        (once-nx-ny  (p-get-by-index DD i j))
        (bench-nx-ny (p-get-by-index DD i j))
-       true => truthy)
-
- (fact "performance m-get-by-index"
-       (once-nx-ny  (m-get-by-index DD i j))
-       (bench-nx-ny (m-get-by-index DD i j))
        true => truthy)
 
  (fact
@@ -232,14 +240,20 @@
        => nil)
 
  (fact "performance benchmark JBLAS DoubleMatrix[i,j]"
-       (once  (DoubleMatrix. 500 500))
-       (bench (DoubleMatrix. 500 500))
+       (once  (DoubleMatrix. 50 50))
+       (bench (DoubleMatrix. 50 50))
        true => truthy)
 
  (fact "Clatrix create matrix"
-       (once  (clx/matrix (DoubleMatrix. 500 500)))
-       (bench (clx/matrix (DoubleMatrix. 500 500)))
+       (once  (clx/matrix (DoubleMatrix. 50 50)))
+       (bench (clx/matrix (DoubleMatrix. 50 50)))
+       true => truthy)
+
+ (fact "Core.matrix / Clatrix create matrix"
+       (once  (M/matrix DCM500))
+       (bench (M/matrix DCM500))
        true => truthy))
+
 
 (fact-group
  :submatrix
@@ -252,32 +266,30 @@
                 (dotimes [i# nx-2]
                   (dotimes [j# ny-2]
                     (clx/get subm# i# j#)))))
- (fact "performance benchmark Clatrix/get"
+ (fact "performance benchmark Clatrix matrix / get\n(current standard solution)"
        (once  (subm-test))
        (bench (subm-test))
        true => truthy)
 
- (defmacro subm-cand-test []
-   `(let [subm# (submatrix! DD [[0 nx-2] [0 ny-2]])]
+  (defmacro submatrix-get-test []
+   `(let [subm# (submatrix DD [[0 nx-2] [0 ny-2]])]
                 (dotimes [i# nx-2]
                   (dotimes [j# ny-2]
-                    (p-get-by-index subm# i# j#)))))
- (fact "performance of submatrix! / p-get-by-index"
-       (once  (subm-cand-test))
-       (bench (subm-cand-test))
+                    (get-by-index subm# i# j#)))))
+ (fact "performance of submatrix / get-by-index"
+       (once  (submatrix-get-test))
+       (bench (submatrix-get-test))
        true => truthy)
 
-  (defmacro submatrix-cand-test []
+  (defmacro submatrix-m-get-test []
    `(let [subm# (submatrix DD [[0 nx-2] [0 ny-2]])]
                 (dotimes [i# nx-2]
                   (dotimes [j# ny-2]
                     (m-get-by-index subm# i# j#)))))
  (fact "performance of submatrix / m-get-by-index"
-       (once  (submatrix-cand-test))
-       (bench (submatrix-cand-test))
-       true => truthy)
-
- )
+       (once  (submatrix-m-get-test))
+       (bench (submatrix-m-get-test))
+       true => truthy))
 
 
 
