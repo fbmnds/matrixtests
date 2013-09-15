@@ -261,35 +261,25 @@
  (fact "" (underline "create and access a submatrix")
        => nil)
 
- (defmacro subm-test []
-   `(let [subm# (clx/matrix DD (range nx-2) (range ny-2))]
-                (dotimes [i# nx-2]
-                  (dotimes [j# ny-2]
-                    (clx/get subm# i# j#)))))
- (fact "performance benchmark Clatrix matrix / get\n(current standard solution)"
-       (once  (subm-test))
-       (bench (subm-test))
+ (fact "performance benchmark Clatrix/get"
+       (once  (clx/get DD (range nx-2) (range ny-2)))
+       (bench (clx/get DD (range nx-2) (range ny-2)))
        true => truthy)
 
-  (defmacro submatrix-get-test []
-   `(let [subm# (submatrix DD [[0 nx-2] [0 ny-2]])]
-                (dotimes [i# nx-2]
-                  (dotimes [j# ny-2]
-                    (get-by-index subm# i# j#)))))
- (fact "performance of submatrix / get-by-index"
-       (once  (submatrix-get-test))
-       (bench (submatrix-get-test))
+ (fact "performance of submatrix!"
+       (once  (submatrix! DD [[0 nx-2] [0 ny-2]]))
+       (bench (submatrix! DD [[0 nx-2] [0 ny-2]]))
        true => truthy)
 
-  (defmacro submatrix-m-get-test []
-   `(let [subm# (submatrix DD [[0 nx-2] [0 ny-2]])]
-                (dotimes [i# nx-2]
-                  (dotimes [j# ny-2]
-                    (m-get-by-index subm# i# j#)))))
- (fact "performance of submatrix / m-get-by-index"
-       (once  (submatrix-m-get-test))
-       (bench (submatrix-m-get-test))
-       true => truthy))
+ (fact "performance of submatrix"
+       (once  (submatrix DD [[0 nx-2] [0 ny-2]]))
+       (bench (submatrix DD [[0 nx-2] [0 ny-2]]))
+       true => truthy)
+
+
+ (fact "consistency between Clatrix/get and submatrix"
+       (clx/get DD (range nx-2) (range ny-2))
+       => (submatrix DD [[0 nx-2] [0 ny-2]])))
 
 
 
